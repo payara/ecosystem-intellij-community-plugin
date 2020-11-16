@@ -100,7 +100,7 @@ public class GradleProject extends PayaraMicroProject {
 
     @Override
     public String getReloadCommand() {
-        if (!exploded && useUberJar) {
+        if (!exploded) {
             throw new IllegalStateException("Reload task is only functional for exploded war artifacts.");
         }
         return String.format("gradle %s %s",
