@@ -68,7 +68,7 @@ public class MavenProject extends PayaraMicroProject {
     private static final String COMPILE_GOAL = "compiler:compile";
     private static final String RESOURCES_GOAL = "resources:resources";
     public static final String PACKAGE_GOAL = "package";
-    public static final String DEBUG_PROPERTY = "-Ddebug=\"-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=%s\"";
+    public static final String DEBUG_PROPERTY = "-Ddebug=-agentlib:jdwp=transport=dt_socket,server=n,suspend=n,address=%s";
     private static final String BUILD_FILE = "pom.xml";
     private static final String USE_UBER_JAR = "useUberJar";
     private static final String EXPLODED = "exploded";
