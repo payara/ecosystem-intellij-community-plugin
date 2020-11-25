@@ -29,22 +29,14 @@ public interface PayaraMicroConstants {
     String ARCHETYPE_ARTIFACT_ID_KEY = "archetypeArtifactId";
     String ARCHETYPE_VERSION_KEY = "archetypeVersion";
     String ARCHETYPE_INTERACTIVE_MODE = "interactiveMode";
-    String ARCHETYPE_GENERATE = "org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate";
 
     String PROP_GROUP_ID = "groupId";
     String PROP_ARTIFACT_ID = "artifactId";
     String PROP_VERSION = "version";
-    String PROP_PACKAGE = "package";
 
     String PROP_AUTO_BIND_HTTP = "autoBindHttp";
     String PROP_CONTEXT_ROOT = "contextRoot";
     String PROP_ADD_PAYARA_API = "addPayaraApi";
     String PROP_JDK_VERSION = "jdkVersion";
-    
-    String PLUGIN_GROUP_ID = "fish.payara.maven.plugins";
-    String PLUGIN_ARTIFACT_ID = "payara-micro-maven-plugin";
-    
-    String PAYARA_API_GROUP_ID = "fish.payara.api";
-    String PAYARA_API_ARTIFACT_ID = "payara-api";
 
 }

@@ -124,11 +124,13 @@ public class PayaraMicroModuleBuilder extends JavaModuleBuilder {
         props.put(PROP_CONTEXT_ROOT, moduleDescriptor.getContextRoot());
         props.put(PROP_ADD_PAYARA_API, Boolean.TRUE.toString());
 
-        JavaVersion javaVersion = JavaVersion.parse(jdk.getVersionString());
-        if (javaVersion.feature > 8) {
-            props.put(PROP_JDK_VERSION, String.valueOf(javaVersion.feature));
-        } else {
-            props.put(PROP_JDK_VERSION, "1." + String.valueOf(javaVersion.feature));
+        if(jdk != null) {
+            JavaVersion javaVersion = JavaVersion.parse(jdk.getVersionString());
+            if (javaVersion.feature > 8) {
+                props.put(PROP_JDK_VERSION, String.valueOf(javaVersion.feature));
+            } else {
+                props.put(PROP_JDK_VERSION, "1." + String.valueOf(javaVersion.feature));
+            }
         }
         MavenArchetype mavenArchetype = new MavenArchetype(
                 ARCHETYPE_GROUP_ID,
