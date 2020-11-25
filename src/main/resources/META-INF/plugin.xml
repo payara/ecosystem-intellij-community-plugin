@@ -1,0 +1,58 @@
+<idea-plugin>
+    <id>fish.payara.intellij</id>
+    <name>Payara Tools</name>
+    <vendor email="info@payara.fish" url="https://www.payara.fish/">
+        Payara Foundation
+    </vendor>
+
+    <description>
+        Payara Intellij plugin allows configuring and using the Payara Platform, 
+        for deploying and managing applications from the Intellij IDEA.  
+    </description>
+    
+    <depends>org.jetbrains.idea.maven</depends>
+    <depends>org.jetbrains.plugins.gradle</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.modules.platform</depends>
+    <resource-bundle>fish.payara.PayaraBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <configurationType implementation="fish.payara.micro.PayaraMicroConfigurationType"/>
+        <moduleBuilder builderClass="fish.payara.micro.project.PayaraMicroModuleBuilder" order="last" id="PAYARA_MICRO_MODULE_BUILDER"/>
+        <moduleType implementationClass="fish.payara.micro.project.PayaraMicroModuleType" id="JAVA_MODULE"/>
+    </extensions>
+    
+    <actions>
+        <action id="fish.payara.micro.actions.MicroStartAction"
+                class="fish.payara.micro.actions.MicroStartAction"
+                text="Start Micro"
+                description="Start Payara Micro"
+                icon="AllIcons.Actions.Execute" />
+        
+        <action id="fish.payara.micro.actions.MicroStartDebuggerAction"
+                class="fish.payara.micro.actions.MicroStartDebuggerAction"
+                text="Start Micro in debug mode"
+                description="Start Payara Micro in debug mode"
+                icon="AllIcons.Actions.StartDebugger" />
+        
+        <action id="fish.payara.micro.actions.MicroStopAction"
+                class="fish.payara.micro.actions.MicroStopAction"
+                text="Stop Micro"
+                description="Stop Payara Micro" 
+                icon="AllIcons.Actions.Cancel" >
+        </action>
+        
+        <action id="fish.payara.micro.actions.MicroBundleAction"
+                class="fish.payara.micro.actions.MicroBundleAction"
+                text="Build Micro Uber Jar"
+                description="Build Micro Uber Jar"
+                icon="AllIcons.Actions.Compile" />
+
+        <action id="fish.payara.micro.actions.MicroReloadAction"
+                class="fish.payara.micro.actions.MicroReloadAction"
+                text="Reload Micro"
+                description="Reload Payara Micro"
+                icon="AllIcons.Actions.Refresh" />
+    </actions>
+</idea-plugin>
