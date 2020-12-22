@@ -16,10 +16,7 @@
  */
 package fish.payara.micro.actions;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -29,6 +26,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.terminal.JBTerminalWidget;
 import com.intellij.ui.content.Content;
 import com.jediterm.terminal.TtyConnector;
+import fish.payara.PayaraBundle;
 import fish.payara.PayaraConstants;
 import fish.payara.micro.PayaraMicroProject;
 import fish.payara.micro.gradle.GradleProject;
@@ -66,14 +64,14 @@ public abstract class MicroAction extends AnAction {
             PayaraMicroProject microProject = MavenProject.getInstance(project);
             PayaraMicroProject gradleProject = GradleProject.getInstance(project);
             if (microProject == null && gradleProject == null) {
-                LOG.warning("Unable to resolve Payara Micro project type.");
+                LOG.warning(PayaraBundle.message("MicroAction.notification.message"));
                 Notifications.Bus.notify(
                         new Notification(
-                                "Payara Micro Action",
+                                PayaraBundle.message("MicroAction.notification.group"),
                                 PayaraConstants.PAYARA_ICON,
                                 e.getPresentation().getDescription(),
                                 "",
-                                "Unable to resolve Payara Micro project type.",
+                                PayaraBundle.message("MicroAction.notification.message"),
                                 NotificationType.WARNING,
                                 NotificationListener.URL_OPENING_LISTENER
                         ), project);

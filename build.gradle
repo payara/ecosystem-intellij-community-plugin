@@ -21,7 +21,7 @@ dependencies {
 }
 
 intellij {
-    version '2020.2'
+    version '2020.3'
     type 'IC'
     pluginName = 'Payara Micro'
     plugins 'java', 'maven', 'maven-model', 'gradle', 'terminal'
