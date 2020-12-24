@@ -46,12 +46,6 @@ public class MicroGradleConfigurationFactory extends ConfigurationFactory {
 
     @NotNull
     @Override
-    public String getId() {
-        return FACTORY_NAME;
-    }
-
-    @NotNull
-    @Override
     public Icon getIcon() {
         return GradleFile;
     }
