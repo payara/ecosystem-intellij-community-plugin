@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-EPL%202.0-red.svg)](http://www.eclipse.org/legal/epl-2.0)
 
-ATTENTION: Support for this repository is handled in the [Ecosystem Support repository](https://github.com/payara/ecosystem-support)
+**ATTENTION**: Support for this repository is handled in the [Ecosystem Support repository](https://github.com/payara/ecosystem-support)
 
 Payara IntelliJ IDEA Community tools provide integration of Payara Micro 
 into the IntelliJ IDEA Community Edition. The extension is available in the 
