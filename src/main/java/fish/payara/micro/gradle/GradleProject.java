@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2021 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,8 @@
  */
 package fish.payara.micro.gradle;
 
+import com.intellij.openapi.extensions.PluginDescriptor;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -29,6 +31,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -225,4 +228,23 @@ public class GradleProject extends PayaraMicroProject {
                 && pairs[1].trim().equals("true");
     }
 
+    @Override
+    public RuntimeException createError(Throwable error, PluginId pluginId) {
+        return getProject().createError(error, pluginId);
+    }
+
+    @Override
+    public RuntimeException createError(String message, PluginId pluginId) {
+        return getProject().createError(message, pluginId);
+    }
+
+    @Override
+    public RuntimeException createError(String message, PluginId pluginId, Map<String, String> attachments) {
+        return getProject().createError(message, pluginId, attachments);
+    }
+
+    @Override
+    public <T> Class<T> loadClass(String className, PluginDescriptor pluginDescriptor) throws ClassNotFoundException {
+        return getProject().loadClass(className, pluginDescriptor);
+    }
 }

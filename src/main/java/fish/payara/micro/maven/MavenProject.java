@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2021 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,8 @@
  */
 package fish.payara.micro.maven;
 
+import com.intellij.openapi.extensions.PluginDescriptor;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
@@ -34,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -359,4 +362,23 @@ public class MavenProject extends PayaraMicroProject {
         return plugins;
     }
 
+    @Override
+    public RuntimeException createError(Throwable error, PluginId pluginId) {
+        return getProject().createError(error, pluginId);
+    }
+
+    @Override
+    public RuntimeException createError(String message, PluginId pluginId) {
+        return getProject().createError(message, pluginId);
+    }
+
+    @Override
+    public RuntimeException createError(String message, PluginId pluginId, Map<String, String> attachments) {
+        return getProject().createError(message, pluginId, attachments);
+    }
+
+    @Override
+    public <T> Class<T> loadClass(String className, PluginDescriptor pluginDescriptor) throws ClassNotFoundException {
+        return getProject().loadClass(className, pluginDescriptor);
+    }
 }
