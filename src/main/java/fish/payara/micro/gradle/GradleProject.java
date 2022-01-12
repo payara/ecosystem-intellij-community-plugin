@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2022 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,7 @@
  */
 package fish.payara.micro.gradle;
 
+import com.intellij.diagnostic.ActivityCategory;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
@@ -25,6 +26,7 @@ import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import static fish.payara.PayaraConstants.DEFAULT_DEBUG_PORT;
 import fish.payara.micro.PayaraMicroProject;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -239,8 +241,34 @@ public class GradleProject extends PayaraMicroProject {
     }
 
     @Override
-    public RuntimeException createError(String message, PluginId pluginId, Map<String, String> attachments) {
-        return getProject().createError(message, pluginId, attachments);
+    public RuntimeException createError(String message, Throwable throwable, PluginId pluginId, Map<String, String> attachments) {
+        return getProject().createError(message, throwable, pluginId, attachments);
+    }
+
+    @Override
+    public @NotNull
+    ActivityCategory getActivityCategory(boolean isExtension) {
+        return getProject().getActivityCategory(isExtension);
+    }
+
+    @Override
+    public <T> T [] getComponents(@NotNull Class<T> baseClass) {
+        return getProject().getComponents(baseClass);
+    }
+
+    @Override
+    public boolean isInjectionForExtensionSupported() {
+        return getProject().isInjectionForExtensionSupported();
+    }
+
+    @Override
+    public <T> T getService(@NotNull Class<T> serviceClass) {
+        return getProject().getService(serviceClass);
+    }
+
+    @Override
+    public <T> T instantiateClassWithConstructorInjection(@NotNull Class<T> aClass, @NotNull Object key, @NotNull PluginId pluginId) {
+        return getProject().instantiateClassWithConstructorInjection(aClass, key, pluginId);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2022 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,6 +41,12 @@ public class MicroGradleConfigurationFactory extends ConfigurationFactory {
     @NotNull
     @Override
     public String getName() {
+        return FACTORY_NAME;
+    }
+
+    @NotNull
+    @Override
+    public String getId() {
         return FACTORY_NAME;
     }
 
