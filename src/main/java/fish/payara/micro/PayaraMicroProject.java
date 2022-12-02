@@ -57,6 +57,8 @@ public abstract class PayaraMicroProject implements Project {
 
     public abstract String getBundleCommand();
 
+    public abstract String getTransformCommand(String srcPath, String targetPath);
+
     @Override
     public String getName() {
         return project.getName();

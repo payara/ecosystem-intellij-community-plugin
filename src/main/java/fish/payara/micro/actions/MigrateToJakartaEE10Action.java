@@ -1,19 +1,28 @@
 package fish.payara.micro.actions;
 
-import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.eclipse.transformer.Transformer;
-import org.eclipse.transformer.jakarta.JakartaTransformer;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.terminal.JBTerminalWidget;
+import fish.payara.micro.PayaraMicroProject;
+import fish.payara.micro.maven.MavenProject;
 import org.jetbrains.annotations.NotNull;
 
-public class MigrateToJakartaEE10Action extends AnAction {
+import java.util.logging.Logger;
+
+import static java.util.logging.Level.WARNING;
+
+public class MigrateToJakartaEE10Action extends MicroAction {
+    private static final Logger LOG = Logger.getLogger(MigrateToJakartaEE10Action.class.getName());
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent actionEvent) {
         VirtualFile srcFolder = PlatformDataKeys.VIRTUAL_FILE.getData(actionEvent.getDataContext());
@@ -24,21 +33,24 @@ public class MigrateToJakartaEE10Action extends AnAction {
         String newProjectName = srcFolder.getName() + "-JakartaEE10";
         String destinationPath = destFolder.getPath() + "/" + newProjectName;
 
-        Transformer jTrans = new Transformer(System.out, System.err);
-        jTrans.setOptionDefaults(JakartaTransformer.class, JakartaTransformer.getOptionDefaults());
-        jTrans.setArgs(new String[] {srcFolder.getPath(), destinationPath});
-        int rc = jTrans.run();
-        if (rc == Transformer.SUCCESS_RC) {
+        final Project project = CommonDataKeys.PROJECT.getData(actionEvent.getDataContext());
+        PsiFile[] poms = FilenameIndex.getFilesByName(project, "pom.xml", GlobalSearchScope.projectScope(project));
+        PayaraMicroProject microProject = new MavenProject(project, poms[0]);
+        String projectName = project.getName();
+        JBTerminalWidget terminal = getTerminal(project, projectName);
+        if (terminal != null) {
+            executeCommand(terminal, microProject.getTransformCommand(srcFolder.getPath(), destinationPath));
             Messages.showMessageDialog(
-                    "Project " + newProjectName + " generated!",
+                    "Generating new Project: " + newProjectName + "!",
                     "Confirmation",
                     Messages.getInformationIcon());
         } else {
-            Messages.showErrorDialog("Problem when creating " + newProjectName + " project", "Error");
+            LOG.log(WARNING, "Shell window for {0} is not available.", projectName);
         }
-
-        ProjectUtil.openOrImport(destinationPath, actionEvent.getProject(), true);
     }
+
+    @Override
+    public void onAction(PayaraMicroProject project) {}
 
     @Override
     public void update(AnActionEvent e) {
@@ -48,6 +60,9 @@ public class MigrateToJakartaEE10Action extends AnAction {
     }
 
     private boolean isRoot(VirtualFile file, Project project) {
-        return file.getPath().equals(project.getBasePath());
+        if (file != null && project != null) {
+            return file.getPath().equals(project.getBasePath());
+        }
+        return false;
     }
 }

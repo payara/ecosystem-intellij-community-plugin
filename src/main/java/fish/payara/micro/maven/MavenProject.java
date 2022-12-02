@@ -79,6 +79,9 @@ public class MavenProject extends PayaraMicroProject {
     private static final String EXPLODED = "exploded";
     private static final String EXPLODED_PROPERTY = "-Dexploded=true";
     public static final String DEPLOY_WAR_PROPERTY = "-DdeployWar=true";
+    public static final String PAYARA_TRANSFORMER = "fish.payara.transformer";
+    public static final String PAYARA_TRANSFORMER_MAVEN = "fish.payara.transformer.maven";
+    public static final String PAYARA_TRANSFORMER_VERSION = "0.2.10-SNAPSHOT";
     private boolean useUberJar, exploded;
 
     @Override
@@ -142,6 +145,12 @@ public class MavenProject extends PayaraMicroProject {
         );
     }
 
+    @Override
+    public String getTransformCommand(String srcPath, String targetPath) {
+        return String.format("mvn package %s:%s:%s:run -DselectedSource=%s -DselectedTarget=%s",
+                PAYARA_TRANSFORMER, PAYARA_TRANSFORMER_MAVEN, PAYARA_TRANSFORMER_VERSION, srcPath, targetPath);
+    }
+
     public static MavenProject getInstance(Project project) {
         PsiFile pom = getPomFile(project);
         if (pom != null) {
@@ -150,7 +159,7 @@ public class MavenProject extends PayaraMicroProject {
         return null;
     }
 
-    private MavenProject(Project project, PsiFile pom) {
+    public MavenProject(Project project, PsiFile pom) {
         super(project, pom);
         parsePom();
     }
