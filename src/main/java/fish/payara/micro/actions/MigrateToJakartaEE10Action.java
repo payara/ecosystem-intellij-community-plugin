@@ -29,11 +29,13 @@ public class MigrateToJakartaEE10Action extends MicroAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent actionEvent) {
         VirtualFile srcFile = PlatformDataKeys.VIRTUAL_FILE.getData(actionEvent.getDataContext());
+        assert srcFile != null;
         FileChooserDescriptor fileDescriptor = new FileChooserDescriptor(false,true,
                 false,false,false,false)
-                .withTitle("Choose the New Project Destination Folder");
+                .withTitle(srcFile.isDirectory() ? "Choose the New Project Destination Folder" :
+                        "Choose the New File Destination Folder");
         VirtualFile destFolder = FileChooser.chooseFile(fileDescriptor, actionEvent.getProject(), srcFile);
-        assert srcFile != null;
+        assert destFolder != null;
         String destinationPath = getDestinationPath(destFolder, srcFile);
 
         final Project project = CommonDataKeys.PROJECT.getData(actionEvent.getDataContext());
