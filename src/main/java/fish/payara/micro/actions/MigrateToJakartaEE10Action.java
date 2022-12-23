@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.INFO;
@@ -62,6 +63,7 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                     "Generating: " + destinationPath,
                     "Confirmation",
                     Messages.getInformationIcon());
+            final int TIME_OUT = 1000 * 60 * 5;
             executorService.execute(new Thread(() -> {
                 executeCommand(terminal, microProject.getTransformCommand(srcFile.getPath(), destinationPath));
             }));
@@ -74,6 +76,11 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         LOG.log(WARNING, e.getMessage(), projectName);
+                    }
+                    if (count > TIME_OUT) {
+                        String message = "Migration Aborted after 5 minutes";
+                        LOG.log(WARNING, message, projectName);
+                        throw new RuntimeException(message);
                     }
                 }
                 if (srcFile.isDirectory()) {
