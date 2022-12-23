@@ -71,7 +71,6 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                 Path file = Paths.get(destinationPath);
                 int count = 1;
                 while (!Files.exists(file)) {
-                    LOG.log(INFO, "Waiting for transform command in terminal: " + count++);
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
