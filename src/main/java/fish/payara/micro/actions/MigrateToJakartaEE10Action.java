@@ -4,10 +4,15 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
@@ -18,6 +23,10 @@ import fish.payara.micro.maven.MavenProject;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.INFO;
@@ -45,29 +54,30 @@ public class MigrateToJakartaEE10Action extends MicroAction {
         String projectName = project.getName();
         JBTerminalWidget terminal = getTerminal(project, projectName);
         if (terminal != null) {
-            executeCommand(terminal, microProject.getTransformCommand(srcFile.getPath(), destinationPath));
             Messages.showMessageDialog(
                     "Generating: " + destinationPath,
                     "Confirmation",
                     Messages.getInformationIcon());
+            executeCommand(terminal, microProject.getTransformCommand(srcFile.getPath(), destinationPath));
+            new Thread(() -> {
+                Path file = Paths.get(destinationPath);
+                int count = 1;
+                while (!Files.exists(file)) {
+                    LOG.log(INFO, "Waiting for transform command in terminal: " + count++);
+                    try {
+                    Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        LOG.log(WARNING, e.getMessage(), projectName);
+                    }
+                }
+                if (srcFile.isDirectory()) {
+                    ProjectUtil.openOrImport(destinationPath, project, true);
+                } else {
+                    VfsUtil.findFile(file, true);
+                }
+            }).start();
         } else {
             LOG.log(WARNING, "Shell window for {0} is not available.", projectName);
-        }
-        finalAction(destinationPath, project);
-    }
-
-    private static void finalAction(String destinationPath, Project project) {
-        File file = new File(destinationPath);
-        while (!file.exists()) {
-            LOG.log(INFO, "waiting for terminal transform command");
-        }
-        if (file.isFile()) {
-            Messages.showMessageDialog(
-                    "File " + destinationPath + " created!",
-                    "Finished",
-                    Messages.getInformationIcon());
-        } else {
-            ProjectUtil.openOrImport(destinationPath, project, true);
         }
     }
 
@@ -75,12 +85,15 @@ public class MigrateToJakartaEE10Action extends MicroAction {
     private static String getDestinationPath(VirtualFile destFolder, VirtualFile srcFile) {
         String fileName = srcFile.getName();
         if (srcFile.isDirectory()) {
-            return destFolder.getPath() + "/" + fileName + "-JakartaEE10";
+            return destFolder.getPath() + "/" + fileName + "JakartaEE10";
         }
-        int dotIndex = fileName.lastIndexOf(".");
-
-        return destFolder.getPath() + "/" + fileName.substring(0, dotIndex) + "JakartaEE10"
-                + fileName.substring(dotIndex);
+        String destPath = destFolder.getPath() + "/jakartaee10/";
+        try {
+            Files.createDirectories(Paths.get(destPath));
+            return destPath + fileName;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
