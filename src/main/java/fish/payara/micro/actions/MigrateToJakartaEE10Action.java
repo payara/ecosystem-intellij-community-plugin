@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.INFO;
@@ -34,6 +36,8 @@ import static java.util.logging.Level.WARNING;
 
 public class MigrateToJakartaEE10Action extends MicroAction {
     private static final Logger LOG = Logger.getLogger(MigrateToJakartaEE10Action.class.getName());
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent actionEvent) {
@@ -58,14 +62,16 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                     "Generating: " + destinationPath,
                     "Confirmation",
                     Messages.getInformationIcon());
-            executeCommand(terminal, microProject.getTransformCommand(srcFile.getPath(), destinationPath));
-            new Thread(() -> {
+            executorService.execute(new Thread(() -> {
+                executeCommand(terminal, microProject.getTransformCommand(srcFile.getPath(), destinationPath));
+            }));
+            executorService.execute(new Thread(() -> {
                 Path file = Paths.get(destinationPath);
                 int count = 1;
                 while (!Files.exists(file)) {
                     LOG.log(INFO, "Waiting for transform command in terminal: " + count++);
                     try {
-                    Thread.sleep(1000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         LOG.log(WARNING, e.getMessage(), projectName);
                     }
@@ -75,7 +81,7 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                 } else {
                     VfsUtil.findFile(file, true);
                 }
-            }).start();
+            }));
         } else {
             LOG.log(WARNING, "Shell window for {0} is not available.", projectName);
         }
