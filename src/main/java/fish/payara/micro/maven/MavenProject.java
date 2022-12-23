@@ -81,7 +81,7 @@ public class MavenProject extends PayaraMicroProject {
     public static final String DEPLOY_WAR_PROPERTY = "-DdeployWar=true";
     public static final String PAYARA_TRANSFORMER = "fish.payara.transformer";
     public static final String PAYARA_TRANSFORMER_MAVEN = "fish.payara.transformer.maven";
-    public static final String PAYARA_TRANSFORMER_VERSION = "0.2.10";
+    public static final String PAYARA_TRANSFORMER_VERSION = "0.2.11";
     private boolean useUberJar, exploded;
 
     @Override
