@@ -63,7 +63,7 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                     "Generating: " + destinationPath,
                     "Confirmation",
                     Messages.getInformationIcon());
-            final int TIME_OUT = 1000 * 60 * 5;
+            final int TIME_OUT = 60 * 5;
             executorService.execute(new Thread(() -> {
                 executeCommand(terminal, microProject.getTransformCommand(srcFile.getPath(), destinationPath));
             }));
@@ -76,7 +76,7 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                     } catch (InterruptedException e) {
                         LOG.log(WARNING, e.getMessage(), projectName);
                     }
-                    if (count > TIME_OUT) {
+                    if (++count > TIME_OUT) {
                         String message = "Migration Aborted after 5 minutes";
                         LOG.log(WARNING, message, projectName);
                         throw new RuntimeException(message);
