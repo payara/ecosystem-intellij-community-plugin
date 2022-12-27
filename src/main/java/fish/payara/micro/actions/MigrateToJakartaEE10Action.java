@@ -4,14 +4,10 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -22,17 +18,14 @@ import fish.payara.micro.PayaraMicroProject;
 import fish.payara.micro.maven.MavenProject;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 
 public class MigrateToJakartaEE10Action extends MicroAction {
@@ -64,10 +57,10 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                     "Confirmation",
                     Messages.getInformationIcon());
             final int TIME_OUT = 60 * 5;
-            executorService.execute(new Thread(() -> {
+            executorService.execute(() -> {
                 executeCommand(terminal, microProject.getTransformCommand(quoteIt(srcFile.getPath()), quoteIt(destinationPath)));
-            }));
-            executorService.execute(new Thread(() -> {
+            });
+            executorService.execute(() -> {
                 Path file = Paths.get(destinationPath);
                 int count = 1;
                 while (!Files.exists(file)) {
@@ -87,7 +80,7 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                 } else {
                     VfsUtil.findFile(file, true);
                 }
-            }));
+            });
         } else {
             LOG.log(WARNING, "Shell window for {0} is not available.", projectName);
         }
