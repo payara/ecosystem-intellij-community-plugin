@@ -112,8 +112,7 @@ public class MigrateToJakartaEE10Action extends MicroAction {
     public void update(AnActionEvent e) {
         VirtualFile file = PlatformDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
         e.getPresentation().setEnabledAndVisible(file != null && (
-                !file.isDirectory() || isRoot(file, e.getProject())
-        ));
+                !file.isDirectory() || isRoot(file, e.getProject()) || "src".equals(file.getName())));
     }
 
     private boolean isRoot(VirtualFile file, Project project) {
