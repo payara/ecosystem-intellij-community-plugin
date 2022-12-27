@@ -127,6 +127,11 @@ public class GradleProject extends PayaraMicroProject {
         );
     }
 
+    @Override
+    public String getTransformCommand(String srcPath, String targetPath) {
+        return null;
+    }
+
     public static GradleProject getInstance(Project project) {
         PsiFile buildFile = getBuildFile(project);
         if (buildFile != null) {
