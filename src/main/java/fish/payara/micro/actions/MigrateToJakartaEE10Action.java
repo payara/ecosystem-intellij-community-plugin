@@ -65,7 +65,7 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                     Messages.getInformationIcon());
             final int TIME_OUT = 60 * 5;
             executorService.execute(new Thread(() -> {
-                executeCommand(terminal, microProject.getTransformCommand(srcFile.getPath(), destinationPath));
+                executeCommand(terminal, microProject.getTransformCommand(quoteIt(srcFile.getPath()), quoteIt(destinationPath)));
             }));
             executorService.execute(new Thread(() -> {
                 Path file = Paths.get(destinationPath);
@@ -91,6 +91,10 @@ public class MigrateToJakartaEE10Action extends MicroAction {
         } else {
             LOG.log(WARNING, "Shell window for {0} is not available.", projectName);
         }
+    }
+
+    private String quoteIt(String path) {
+        return "'" + path + "'";
     }
 
     @NotNull
