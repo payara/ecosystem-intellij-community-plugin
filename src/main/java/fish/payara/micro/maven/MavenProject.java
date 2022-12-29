@@ -395,11 +395,6 @@ public class MavenProject extends PayaraMicroProject {
     }
 
     @Override
-    public <T> T [] getComponents(@NotNull Class<T> baseClass) {
-        return getProject().getComponents(baseClass);
-    }
-
-    @Override
     public boolean isInjectionForExtensionSupported() {
         return getProject().isInjectionForExtensionSupported();
     }
