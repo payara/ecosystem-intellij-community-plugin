@@ -155,7 +155,7 @@ public class PayaraMicroModuleBuilder extends JavaModuleBuilder {
         }, ModalityState.current());
     }
 
-        @Override
+    @Override
     public boolean isAvailable() {
         return true;
     }
