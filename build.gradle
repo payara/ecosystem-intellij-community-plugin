@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.16'
+    id 'org.jetbrains.intellij' version '1.11.0'
 }
 
 apply plugin: 'org.jetbrains.intellij'
@@ -8,27 +8,29 @@ apply plugin: 'idea'
 apply plugin: 'java'
 
 group 'fish.payara.micro.intellij'
-version '1.4.1'
+version '1.5.0'
 
-sourceCompatibility = 11
+sourceCompatibility = "17"
+targetCompatibility = "17"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.1'
 }
 
 intellij {
-    version '2021.3'
-    type 'IC'
+    version = '2022.3'
+    type = 'IC'
     pluginName = 'Payara Micro'
-    plugins 'java', 'maven', 'maven-model', 'gradle', 'terminal'
+    plugins = ['java', 'maven', 'maven-model', 'gradle', 'terminal']
 }
 
 patchPluginXml {
-    untilBuild '224'
+    sinceBuild = "223"
+    untilBuild = "231.*"
 }
 
 publishPlugin {

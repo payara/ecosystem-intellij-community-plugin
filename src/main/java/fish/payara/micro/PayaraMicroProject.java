@@ -16,14 +16,18 @@
  */
 package fish.payara.micro;
 
+import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.messages.MessageBus;
+import org.jetbrains.annotations.NotNull;
 import org.picocontainer.PicoContainer;
-
+import kotlinx.coroutines.CoroutineScope;
+import kotlinx.coroutines.GlobalScope;
 /**
  *
  * @author gaurav.gupta@payara.fish
@@ -152,6 +156,25 @@ public abstract class PayaraMicroProject implements Project {
     @Override
     public void dispose() {
         project.dispose();
+    }
+
+    public CoroutineScope getCoroutineScope() {
+        return GlobalScope.INSTANCE;
+    }
+
+    @Override
+    public <@NotNull T> T instantiateClass(@NotNull String baseClass, PluginDescriptor pluginDescriptor) {
+        return getProject().instantiateClass(baseClass, pluginDescriptor);
+    }
+
+    @Override
+    public ExtensionsArea getExtensionArea() {
+        return getProject().getExtensionArea();
+    }
+
+    @Override
+    public boolean hasComponent(@NotNull Class<?> interfaceClass) {
+        return getProject().hasComponent(interfaceClass);
     }
 
 }

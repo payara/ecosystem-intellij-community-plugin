@@ -50,7 +50,7 @@ public class PayaraMicroModuleBuilder extends JavaModuleBuilder {
     private final ModuleDescriptor moduleDescriptor = new ModuleDescriptor();
     
     @Override
-    public final String getParentGroup() {
+    public String getBuilderId() {
         return MODULE_ID;
     }
 
@@ -153,6 +153,11 @@ public class PayaraMicroModuleBuilder extends JavaModuleBuilder {
             }, PayaraBundle.message("PayaraMicroProjectWizardStep.generating.project", this.getPresentableName()), true, null);
             LocalFileSystem.getInstance().refresh(false);
         }, ModalityState.current());
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return true;
     }
 
 }
