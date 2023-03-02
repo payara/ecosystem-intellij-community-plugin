@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2023 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,6 +40,19 @@ public class PayaraMicroProjectWizardStep extends ModuleWizardStep {
     private JTextField artifactIdTextField;
     private JCheckBox autoBindHttpCheckBox;
     private JTextField contextRootTextField;
+    private JComboBox<String> microVersionComboBox;
+    
+    public static final String[] ARCHETYPE_MICRO_VERSIONS = new String[]{
+            "6.2023.2", "6.2023.1", "6.2022.2", "6.2022.1",
+            "5.2022.5", "5.2022.4", "5.2022.3",
+            "5.2022.2", "5.2022.1", "5.2021.10",
+            "5.2021.9", "5.2021.8", "5.2021.7",
+            "5.2021.6", "5.2021.5", "5.2021.4",
+            "5.2021.3", "5.2021.2", "5.2021.1",
+            "5.2020.7", "5.2020.6", "5.2020.5",
+            "5.2020.4", "5.2020.3", "5.2020.2",
+            "5.201", "5.194", "5.193.1", "5.192",
+            "5.191", "5.184", "5.183", "5.182", "5.181"};
         
     private static final Pattern GROUP_ID_PATTERN = Pattern.compile("^[a-z0-9_]+(\\.[a-z0-9_]+)*$");
     private static final Pattern ARTIFACT_ID_PATTERN = Pattern.compile("^[a-z0-9_]+([\\-\\.][a-z0-9_]+)*$");
@@ -109,6 +122,17 @@ public class PayaraMicroProjectWizardStep extends ModuleWizardStep {
                 ),
                 constraints
         );
+        
+        microVersionComboBox = new JComboBox<String>(ARCHETYPE_MICRO_VERSIONS);
+        microVersionComboBox.setEditable(true);
+        constraints.gridy++;
+        panel.add(
+                LabeledComponent.create(
+                        microVersionComboBox,
+                        PayaraBundle.message("PayaraMicroProjectWizardStep.microVersion.label")
+                ),
+                constraints
+        );
 
         return panel;
     }
@@ -144,6 +168,7 @@ public class PayaraMicroProjectWizardStep extends ModuleWizardStep {
         moduleDescriptor.setArtifactId(getSelectedArtifactId());
         moduleDescriptor.setAutoBindHttp(isAutoBindHttpSelected());
         moduleDescriptor.setContextRoot(getContextRoot());
+        moduleDescriptor.setMicroVersion(getMicroVersion());
 
         wizardContext.setProjectName(getSelectedArtifactId());
         wizardContext.setDefaultModuleName(getSelectedArtifactId());
@@ -171,4 +196,9 @@ public class PayaraMicroProjectWizardStep extends ModuleWizardStep {
             throw new IllegalStateException("Invalid context root value " + contextRootTextField.getText());
         }
     }
+
+    private String getMicroVersion() {
+        return microVersionComboBox.getSelectedItem().toString();
+    }
+
 }

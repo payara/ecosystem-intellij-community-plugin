@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2023 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,6 +26,7 @@ public class ModuleDescriptor {
     private String artifactId;
     private boolean autoBindHttp;
     private String contextRoot;
+    private String microVersion;
 
     public String getGroupId() {
         return groupId;
@@ -59,6 +60,14 @@ public class ModuleDescriptor {
         this.contextRoot = contextRoot;
     }
 
+    public String getMicroVersion() {
+        return microVersion;
+    }
+
+    public void setMicroVersion(String microVersion) {
+        this.microVersion = microVersion;
+    }
+
     @Override
     public String toString() {
         return "ModuleDescriptor{" +
@@ -66,6 +75,7 @@ public class ModuleDescriptor {
                 ", artifactId='" + artifactId + '\'' +
                 ", autoBindHttp=" + autoBindHttp +
                 ", contextRoot='" + contextRoot + '\'' +
+                ", microVersion='" + microVersion + '\'' +
                 '}';
     }
 }
