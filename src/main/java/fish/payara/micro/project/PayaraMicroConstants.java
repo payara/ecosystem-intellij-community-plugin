@@ -39,5 +39,6 @@ public interface PayaraMicroConstants {
     String PROP_CONTEXT_ROOT = "contextRoot";
     String PROP_ADD_PAYARA_API = "addPayaraApi";
     String PROP_JDK_VERSION = "jdkVersion";
+    String PROP_MICRO_VERSION = "payaraMicroVersion";
 
 }
