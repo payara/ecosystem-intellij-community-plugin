@@ -125,6 +125,7 @@ public class PayaraMicroModuleBuilder extends JavaModuleBuilder {
         props.put(PROP_AUTO_BIND_HTTP, Boolean.toString(moduleDescriptor.isAutoBindHttp()));
         props.put(PROP_CONTEXT_ROOT, moduleDescriptor.getContextRoot());
         props.put(PROP_ADD_PAYARA_API, Boolean.TRUE.toString());
+        props.put(PROP_MICRO_VERSION, moduleDescriptor.getMicroVersion().trim());
 
         if(jdk != null) {
             JavaVersion javaVersion = JavaVersion.parse(jdk.getVersionString());
