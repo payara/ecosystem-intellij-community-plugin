@@ -70,8 +70,8 @@
 
         <action id="fish.payara.micro.actions.MigrateToJakartaEE10Action"
                 class="fish.payara.micro.actions.MigrateToJakartaEE10Action"
-                text="Migrate to Jakarta-EE-10"
-                description="Migrate to Jakarta-EE-10">
+                text="Transform to Jakarta-EE-10"
+                description="Transform to Jakarta-EE-10">
             <add-to-group group-id="RefactoringMenu" anchor="last"/>
         </action>
     </actions>

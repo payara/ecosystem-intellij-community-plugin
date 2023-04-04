@@ -70,7 +70,7 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                         LOG.log(WARNING, e.getMessage(), projectName);
                     }
                     if (++count > TIME_OUT) {
-                        String message = "Migration Aborted after 5 minutes";
+                        String message = "Tranformation aborted after 5 minutes";
                         LOG.log(WARNING, message, projectName);
                         throw new RuntimeException(message);
                     }
