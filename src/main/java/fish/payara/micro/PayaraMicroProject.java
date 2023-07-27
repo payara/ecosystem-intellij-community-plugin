@@ -18,11 +18,13 @@ package fish.payara.micro;
 
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.extensions.PluginDescriptor;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 import org.picocontainer.PicoContainer;
@@ -41,6 +43,10 @@ public abstract class PayaraMicroProject implements Project {
     protected PayaraMicroProject(Project project, PsiFile buildFile) {
         this.project = project;
         this.buildFile = buildFile;
+    }
+
+    public <T> T instantiateClass(@NotNull Class<T> aClass, @NotNull PluginId pluginId) {
+        return ReflectionUtil.newInstance(aClass, false);
     }
 
     public Project getProject() {
@@ -121,11 +127,6 @@ public abstract class PayaraMicroProject implements Project {
     @Override
     public <T> T getComponent(Class<T> type) {
         return project.getComponent(type);
-    }
-
-    @Override
-    public PicoContainer getPicoContainer() {
-        return project.getPicoContainer();
     }
 
     @Override

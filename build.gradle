@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.13.0'
+    id 'org.jetbrains.intellij' version '1.15.0'
 }
 
 apply plugin: 'org.jetbrains.intellij'
@@ -22,15 +22,15 @@ dependencies {
 }
 
 intellij {
-    version = '2022.3'
+    version = '2023.2'
     type = 'IC'
     pluginName = 'Payara Micro'
     plugins = ['java', 'maven', 'maven-model', 'gradle', 'terminal']
 }
 
 patchPluginXml {
-    sinceBuild = "223"
-    untilBuild = "231.*"
+    sinceBuild = "232"
+    untilBuild = "233.*"
 }
 
 publishPlugin {
