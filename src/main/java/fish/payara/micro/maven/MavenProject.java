@@ -63,9 +63,10 @@ public class MavenProject extends PayaraMicroProject {
     private static final String NAME = "name";
     public static final String MICRO_GROUP_ID = "fish.payara.maven.plugins";
     public static final String MICRO_ARTIFACT_ID = "payara-micro-maven-plugin";
-    public static final String MICRO_VERSION = "1.1.0";
+    public static final String MICRO_VERSION = "2.3";
     public static final String MICRO_PLUGIN = "payara-micro";
     public static final String START_GOAL = "start";
+    public static final String DEV_GOAL = "dev";
     private static final String RELOAD_GOAL = "reload";
     private static final String STOP_GOAL = "stop";
     private static final String BUNDLE_GOAL = "bundle";
@@ -81,7 +82,7 @@ public class MavenProject extends PayaraMicroProject {
     public static final String DEPLOY_WAR_PROPERTY = "-DdeployWar=true";
     public static final String PAYARA_TRANSFORMER = "fish.payara.transformer";
     public static final String PAYARA_TRANSFORMER_MAVEN = "fish.payara.transformer.maven";
-    public static final String PAYARA_TRANSFORMER_VERSION = "0.2.11";
+    public static final String PAYARA_TRANSFORMER_VERSION = "0.2.14";
     private boolean useUberJar, exploded;
 
     @Override
@@ -94,7 +95,7 @@ public class MavenProject extends PayaraMicroProject {
         } else {
             cmd = String.format("mvn %s %s:%s:%s",
                     PACKAGE_GOAL,
-                    MICRO_GROUP_ID, MICRO_ARTIFACT_ID, START_GOAL
+                    MICRO_GROUP_ID, MICRO_ARTIFACT_ID, DEV_GOAL
             );
         }
         return debug ? cmd + ' ' + String.format(DEBUG_PROPERTY, DEFAULT_DEBUG_PORT) : cmd;
@@ -103,7 +104,7 @@ public class MavenProject extends PayaraMicroProject {
     private String getStartUberJarCommand() {
         return String.format("mvn %s:%s:%s %s:%s:%s",
                 MICRO_GROUP_ID, MICRO_ARTIFACT_ID, BUNDLE_GOAL,
-                MICRO_GROUP_ID, MICRO_ARTIFACT_ID, START_GOAL
+                MICRO_GROUP_ID, MICRO_ARTIFACT_ID, DEV_GOAL
         );
     }
 
@@ -112,7 +113,7 @@ public class MavenProject extends PayaraMicroProject {
                 RESOURCES_GOAL,
                 COMPILE_GOAL,
                 WAR_EXPLODE_GOAL,
-                MICRO_GROUP_ID, MICRO_ARTIFACT_ID, START_GOAL,
+                MICRO_GROUP_ID, MICRO_ARTIFACT_ID, DEV_GOAL,
                 EXPLODED_PROPERTY,
                 DEPLOY_WAR_PROPERTY
         );
