@@ -49,7 +49,7 @@ public class MicroMavenConfiguration extends MavenRunConfiguration {
                             MavenProject.MICRO_GROUP_ID,
                             MavenProject.MICRO_ARTIFACT_ID,
                             MavenProject.MICRO_VERSION,
-                            MavenProject.START_GOAL,
+                            MavenProject.DEV_GOAL,
                             MavenProject.DEPLOY_WAR_PROPERTY
                     ));
                 } else {
@@ -57,7 +57,7 @@ public class MicroMavenConfiguration extends MavenRunConfiguration {
                     parameters.getGoals().add(String.format(
                             "%s:%s",
                             MavenProject.MICRO_PLUGIN,
-                            MavenProject.START_GOAL
+                            MavenProject.DEV_GOAL
                     ));
                 }
             }
