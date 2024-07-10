@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2024 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,7 +46,7 @@ public class MicroMavenRemoteConnectionCreator implements RemoteConnectionCreato
         ParametersList programParametersList = javaParameters.getProgramParametersList();
 
         String port = String.valueOf(DEFAULT_DEBUG_PORT);
-        programParametersList.add(String.format(MavenProject.DEBUG_PROPERTY, port));
+        programParametersList.add(String.format(MicroMavenProject.DEBUG_PROPERTY, port));
 
         Project project = runConfiguration.getProject();
 

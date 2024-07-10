@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2024 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,23 +41,23 @@ public class MicroMavenConfiguration extends MavenRunConfiguration {
                 parameters.setWorkingDirPath(super.getProject().getBasePath());
             }
             if (parameters.getGoals().isEmpty()) {
-                MavenProject mavenProject = MavenProject.getInstance(super.getProject());
+                MicroMavenProject mavenProject = MicroMavenProject.getInstance(super.getProject());
                 if (mavenProject == null) {
-                    parameters.getGoals().add(MavenProject.PACKAGE_GOAL);
+                    parameters.getGoals().add(MicroMavenProject.PACKAGE_GOAL);
                     parameters.getGoals().add(String.format(
                             "%s:%s:%s:%s %s",
-                            MavenProject.MICRO_GROUP_ID,
-                            MavenProject.MICRO_ARTIFACT_ID,
-                            MavenProject.MICRO_VERSION,
-                            MavenProject.DEV_GOAL,
-                            MavenProject.DEPLOY_WAR_PROPERTY
+                            MicroMavenProject.MICRO_GROUP_ID,
+                            MicroMavenProject.MICRO_ARTIFACT_ID,
+                            MicroMavenProject.MICRO_VERSION,
+                            MicroMavenProject.DEV_GOAL,
+                            MicroMavenProject.DEPLOY_WAR_PROPERTY
                     ));
                 } else {
-                    parameters.getGoals().add(MavenProject.PACKAGE_GOAL);
+                    parameters.getGoals().add(MicroMavenProject.PACKAGE_GOAL);
                     parameters.getGoals().add(String.format(
                             "%s:%s",
-                            MavenProject.MICRO_PLUGIN,
-                            MavenProject.DEV_GOAL
+                            MicroMavenProject.MICRO_PLUGIN,
+                            MicroMavenProject.DEV_GOAL
                     ));
                 }
             }

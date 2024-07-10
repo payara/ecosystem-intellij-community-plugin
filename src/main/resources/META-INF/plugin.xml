@@ -34,9 +34,64 @@
         <configurationType implementation="fish.payara.micro.PayaraMicroConfigurationType"/>
         <moduleBuilder builderClass="fish.payara.micro.project.PayaraMicroModuleBuilder" order="last" id="PAYARA_MICRO_MODULE_BUILDER"/>
         <moduleType implementationClass="fish.payara.micro.project.PayaraMicroModuleType" id="JAVA_MODULE"/>
+        <configurationType implementation="fish.payara.cloud.PayaraCloudConfigurationType"/>
     </extensions>
     
     <actions>
+ 	<action id="fish.payara.cloud.actions.CloudStartAction"
+                class="fish.payara.cloud.actions.CloudStartAction"
+                text="Start Payara Cloud Application"
+                description="Start Payara Cloud Application"
+                icon="AllIcons.Actions.Execute" />
+        
+        <action id="fish.payara.cloud.actions.CloudStopAction"
+                class="fish.payara.cloud.actions.CloudStopAction"
+                text="Stop Payara Cloud Application"
+                description="Stop Payara Cloud Application"
+                icon="AllIcons.Actions.Cancel" />
+        
+        <action id="fish.payara.cloud.actions.CloudLoginAction"
+                class="fish.payara.cloud.actions.CloudLoginAction"
+                text="Login to Payara Cloud"
+                description="Login to Payara Cloud"
+                icon="AllIcons.Actions.Show" />
+        
+        <action id="fish.payara.cloud.actions.CloudDevAction"
+                class="fish.payara.cloud.actions.CloudDevAction"
+                text="Start Payara Cloud Application in DevMode"
+                description="Start Payara Cloud Application in DevMode"
+                icon="AllIcons.Actions.Refresh" />
+        
+        <action id="fish.payara.cloud.actions.CloudDeployAction"
+                class="fish.payara.cloud.actions.CloudDeployAction"
+                text="Deploy Payara Cloud Application"
+                description="Deploy Payara Cloud Application"
+                icon="AllIcons.Actions.Execute" />
+        
+        <action id="fish.payara.cloud.actions.CloudUndeployAction"
+                class="fish.payara.cloud.actions.CloudUndeployAction"
+                text="Undeploy Payara Cloud Application"
+                description="Undeploy Payara Cloud Application"
+                icon="AllIcons.Actions.Close" />
+
+        <action id="fish.payara.cloud.actions.CloudListApplicationAction"
+                class="fish.payara.cloud.actions.CloudListApplicationAction"
+                text="List Payara Cloud Applications"
+                description="List Payara Cloud Applications"
+                icon="AllIcons.Actions.Find" />
+
+        <action id="fish.payara.cloud.actions.CloudListNamespaceAction"
+                class="fish.payara.cloud.actions.CloudListNamespaceAction"
+                text="List Payara Cloud Namespaces"
+                description="List Payara Cloud Namespaces"
+                icon="AllIcons.Actions.Find" />
+
+        <action id="fish.payara.cloud.actions.CloudListSubscriptionAction"
+                class="fish.payara.cloud.actions.CloudListSubscriptionAction"
+                text="List Payara Cloud Subscriptions"
+                description="List Payara Cloud Subscriptions"
+                icon="AllIcons.Actions.Find" />
+
         <action id="fish.payara.micro.actions.MicroStartAction"
                 class="fish.payara.micro.actions.MicroStartAction"
                 text="Start Micro"

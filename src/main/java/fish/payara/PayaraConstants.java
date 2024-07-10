@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2024 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +22,7 @@ import javax.swing.Icon;
 public interface PayaraConstants {
 
     Icon PAYARA_ICON = IconLoader.getIcon("/icons/payara.svg");
+    Icon CLOUD_ICON = IconLoader.getIcon("/icons/cloud.svg");
     int DEFAULT_DEBUG_PORT = 9007;
 
 }

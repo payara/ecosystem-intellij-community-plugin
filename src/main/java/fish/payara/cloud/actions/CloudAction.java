@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2024 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,7 +14,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package fish.payara.micro.actions;
+package fish.payara.cloud.actions;
 
 import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -28,9 +28,8 @@ import com.intellij.ui.content.Content;
 import com.jediterm.terminal.TtyConnector;
 import fish.payara.PayaraBundle;
 import fish.payara.PayaraConstants;
-import fish.payara.micro.PayaraMicroProject;
-import fish.payara.micro.gradle.GradleProject;
-import fish.payara.micro.maven.MicroMavenProject;
+import fish.payara.cloud.maven.CloudMavenProject;
+import fish.payara.cloud.PayaraCloudProject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.terminal.LocalTerminalDirectRunner;
 import org.jetbrains.plugins.terminal.ShellTerminalWidget;
@@ -46,9 +45,9 @@ import java.util.logging.Logger;
  *
  * @author gaurav.gupta@payara.fish
  */
-public abstract class MicroAction extends AnAction {
+public abstract class CloudAction extends AnAction {
 
-    private static final Logger LOG = Logger.getLogger(MicroAction.class.getName());
+    private static final Logger LOG = Logger.getLogger(CloudAction.class.getName());
 
     private static final String TOOL_WINDOW_ID = "Terminal";
 
@@ -61,33 +60,30 @@ public abstract class MicroAction extends AnAction {
                 return;
             }
 
-            PayaraMicroProject microProject = MicroMavenProject.getInstance(project);
-            PayaraMicroProject gradleProject = GradleProject.getInstance(project);
-            if (microProject == null && gradleProject == null) {
-                LOG.warning(PayaraBundle.message("MicroAction.notification.message"));
+            PayaraCloudProject cloudProject = CloudMavenProject.getInstance(project);
+            if (cloudProject == null) {
+                LOG.warning(PayaraBundle.message("CloudAction.notification.message"));
                 Notifications.Bus.notify(
                         new Notification(
-                                PayaraBundle.message("MicroAction.notification.group"),
-                                PayaraConstants.PAYARA_ICON,
+                                PayaraBundle.message("CloudAction.notification.group"),
+                                PayaraConstants.CLOUD_ICON,
                                 e.getPresentation().getDescription(),
                                 "",
-                                PayaraBundle.message("MicroAction.notification.message"),
+                                PayaraBundle.message("CloudAction.notification.message"),
                                 NotificationType.WARNING,
                                 NotificationListener.URL_OPENING_LISTENER
                         ), project);
                 return;
             }
-            if (microProject != null) {
-                onAction(microProject);
-            } else {
-                onAction(gradleProject);
+            if (cloudProject != null) {
+                onAction(cloudProject);
             }
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
     }
 
-    public abstract void onAction(PayaraMicroProject project);
+    public abstract void onAction(PayaraCloudProject project);
 
     public JBTerminalWidget getTerminal(Project project, String tabName) {
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
