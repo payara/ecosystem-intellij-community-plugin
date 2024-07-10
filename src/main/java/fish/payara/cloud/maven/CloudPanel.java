@@ -74,7 +74,10 @@ public class CloudPanel {
     private ComboBox<String> goalsComboBox;
     private ComboBox<String> subscriptionComboBox;
     private ComboBox<String> namespaceComboBox;
-    private static List<Link> subscriptions;
+    private String subscriptionValue;
+    private String namespaceValue;
+    private static List<Link> subscriptionsCache;
+    private Map<String, List<Link>> namespacesCache = new HashMap<>();
     private final static String LOADING = "Loading...";
 
     public CloudPanel(@NotNull Project p, boolean isRunConfiguration) {
@@ -113,21 +116,6 @@ public class CloudPanel {
         goalsComboBox.setEditable(true);
         panel.add(goalsComboBox, c);
 
-//        List<String> subscriptionTitles = new ArrayList<>();
-//        try {
-//            if (subscriptions == null || subscriptions.isEmpty()) {
-//                subscriptions = CloudUtil.getSubscriptions(); // Fetch subscriptions if not already fetched
-//            }
-//            subscriptionTitles = subscriptions.stream()
-//                    .map(link -> link.getTitle())
-//                    .collect(Collectors.toList());
-//        } catch (Throwable e) {
-//            System.out.println("Exception " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//
-//        subscriptionTitles.add(0, "");
-//        subscriptionComboBox = new ComboBox<>(subscriptionTitles.toArray(new String[0]));
         subscriptionComboBox = new ComboBox<>();
         subscriptionComboBox.setEditable(true);
         subscriptionComboBox.addActionListener(e -> {
@@ -241,15 +229,18 @@ public class CloudPanel {
             @Override
             protected void done() {
                 try {
-                    if (subscriptions == null || subscriptions.isEmpty()) {
-                        subscriptions = get(); // Fetch subscriptions if not already fetched
+                    if (subscriptionsCache == null || subscriptionsCache.isEmpty()) {
+                        subscriptionsCache = get(); // Fetch subscriptions if not already fetched
                     }
-                    List<String> subscriptionTitles = subscriptions.stream()
+                    List<String> subscriptionTitles = subscriptionsCache.stream()
                             .map(link -> link.getTitle())
                             .collect(Collectors.toList());
                     subscriptionComboBox.removeAllItems();
-//                    subscriptionTitles.add(0, "");
                     subscriptionTitles.forEach(title -> subscriptionComboBox.addItem(title));
+
+                    if (subscriptionValue != null && !subscriptionValue.isEmpty()) {
+                        subscriptionComboBox.setSelectedItem(subscriptionValue);
+                    }
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Failed to load subscriptions.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -264,30 +255,40 @@ public class CloudPanel {
         namespaceComboBox.addItem(LOADING);
         namespaceComboBox.setSelectedItem(LOADING);
 
-        SwingWorker<List<Link>, Void> worker = new SwingWorker<>() {
-            @Override
-            protected List<Link> doInBackground() throws Exception {
-                // Fetch namespaces in the background
-                return subscriptions != null ? CloudUtil.getNamespaces(selectedSubscription) : Collections.emptyList();
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    List<Link> namespaces = get();
-                    List<String> namespaceTitles = namespaces.stream()
-                            .map(Link::getTitle)
-                            .collect(Collectors.toList());
-                    namespaceComboBox.removeAllItems();
-//                    namespaceTitles.add(0, "");
-                    namespaceTitles.forEach(namespaceComboBox::addItem);
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Failed to load namespaces.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (namespacesCache.containsKey(selectedSubscription)) {
+            updateNamespaceComboBox(namespacesCache.get(selectedSubscription));
+        } else {
+            SwingWorker<List<Link>, Void> worker = new SwingWorker<>() {
+                @Override
+                protected List<Link> doInBackground() throws Exception {
+                    // Fetch namespaces in the background
+                    return subscriptionsCache != null ? CloudUtil.getNamespaces(selectedSubscription) : Collections.emptyList();
                 }
-            }
-        };
-        worker.execute();
+
+                @Override
+                protected void done() {
+                    try {
+                        List<Link> namespaces = get();
+                        updateNamespaceComboBox(namespaces);
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Failed to load namespaces.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            };
+            worker.execute();
+        }
+    }
+
+    private void updateNamespaceComboBox(List<Link> namespaces) {
+        List<String> namespaceTitles = namespaces.stream()
+                .map(Link::getTitle)
+                .collect(Collectors.toList());
+        namespaceComboBox.removeAllItems();
+        namespaceTitles.forEach(namespaceComboBox::addItem);
+        if (namespaceValue != null && !namespaceValue.isEmpty()) {
+            namespaceComboBox.setSelectedItem(namespaceValue);
+        }
     }
 
     private void updateMavenProperties() {
@@ -295,19 +296,20 @@ public class CloudPanel {
         String subscription = (String) subscriptionComboBox.getSelectedItem();
         String namespace = (String) namespaceComboBox.getSelectedItem();
 
-        if (namespace != null && !namespace.isEmpty()) {
+        if (namespace != null && !namespace.isEmpty() && !namespace.equals(LOADING)) {
             mavenProperties.put(CloudMavenProject.NAMESPACE_ATTR, namespace);
         } else {
             mavenProperties.remove(CloudMavenProject.NAMESPACE_ATTR);
         }
 
-        if (subscription != null && !subscription.isEmpty()) {
+        if (subscription != null && !subscription.isEmpty() && !subscription.equals(LOADING)) {
             mavenProperties.put(CloudMavenProject.SUBSCRIPTION_ATTR, subscription);
         } else {
             mavenProperties.remove(CloudMavenProject.SUBSCRIPTION_ATTR);
         }
 
         myPropertiesPanel.setDataFromMap(mavenProperties);
+        System.out.println("updateMavenProperties namespaceValue " + namespaceValue);
     }
 
     private void collectProperties() {
@@ -341,15 +343,19 @@ public class CloudPanel {
         if (mavenProperties.containsKey(CloudMavenProject.SUBSCRIPTION_ATTR)) {
             String subscriptionName = mavenProperties.get(CloudMavenProject.SUBSCRIPTION_ATTR);
             subscriptionComboBox.setSelectedItem(subscriptionName);
+            subscriptionValue = subscriptionName;
         } else {
             subscriptionComboBox.setSelectedItem(null);
         }
         if (mavenProperties.containsKey(CloudMavenProject.NAMESPACE_ATTR)) {
             String namespaceName = mavenProperties.get(CloudMavenProject.NAMESPACE_ATTR);
             namespaceComboBox.setSelectedItem(namespaceName);
+            namespaceValue = namespaceName;
         } else {
             namespaceComboBox.setSelectedItem(null);
         }
+
+        System.out.println("getData namespaceValue " + namespaceValue);
 
     }
 
@@ -367,13 +373,14 @@ public class CloudPanel {
         String subscription = (String) subscriptionComboBox.getSelectedItem();
         String namespace = (String) namespaceComboBox.getSelectedItem();
 
-        if (namespace != null && !namespace.isEmpty()) {
+        if (namespace != null && !namespace.isEmpty() && !namespace.equals(LOADING)) {
             mavenProperties.put(CloudMavenProject.NAMESPACE_ATTR, namespace);
+            namespaceValue = namespace;
         } else {
             mavenProperties.remove(CloudMavenProject.NAMESPACE_ATTR);
         }
 
-        if (subscription != null && !subscription.isEmpty()) {
+        if (subscription != null && !subscription.isEmpty() && !subscription.equals(LOADING)) {
             mavenProperties.put(CloudMavenProject.SUBSCRIPTION_ATTR, subscription);
         } else {
             mavenProperties.remove(CloudMavenProject.SUBSCRIPTION_ATTR);
@@ -385,6 +392,8 @@ public class CloudPanel {
         data.setPassParentEnv(myEnvVariablesComponent.isPassParentEnvs());
 
         config.setGoals((String) goalsComboBox.getSelectedItem());
+
+        System.out.println("set namespaceValue " + namespaceValue);
     }
 
     public Project getProject() {
