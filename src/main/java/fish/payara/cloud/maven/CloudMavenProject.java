@@ -53,9 +53,9 @@ public class CloudMavenProject extends PayaraCloudProject {
     public static final String DEPLOY_GOAL = "deploy";
     public static final String UNDEPLOY_GOAL = "undeploy";
     private static final String STOP_GOAL = "stop";
-    private static final String APPLICATION_GOAL = "application";
-    private static final String NAMESPACE_GOAL = "namespace";
-    private static final String SUBSCRIPTION_GOAL = "subscription";
+    private static final String APPLICATION_GOAL = "list-applications";
+    private static final String NAMESPACE_GOAL = "list-namespaces";
+    private static final String SUBSCRIPTION_GOAL = "list-subscriptions";
     public static final String PACKAGE_GOAL = "package";
     private static final String BUILD_FILE = "pom.xml";
     public static final String NAMESPACE_ATTR = "namespaceName";
