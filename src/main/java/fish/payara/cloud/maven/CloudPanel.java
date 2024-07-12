@@ -31,6 +31,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.RawCommandLineEditor;
 import com.intellij.ui.UserActivityWatcher;
 import com.intellij.util.ui.JBFont;
+import fish.payara.ui.PlaceholderTextField;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.project.MavenConfigurableBundle;
@@ -44,6 +45,8 @@ import javax.ws.rs.core.Link;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.List;
 import java.util.*;
 import java.util.stream.IntStream;
@@ -74,8 +77,8 @@ public class CloudPanel {
     private ComboBox<String> goalsComboBox;
     private ComboBox<String> subscriptionComboBox;
     private ComboBox<String> namespaceComboBox;
-    private String subscriptionValue;
-    private String namespaceValue;
+    private JTextField applicationNameTextField;
+    private String subscriptionValue, namespaceValue, applicationNameValue;
     private static List<Link> subscriptionsCache;
     private Map<String, List<Link>> namespacesCache = new HashMap<>();
     private final static String LOADING = "Loading...";
@@ -140,6 +143,20 @@ public class CloudPanel {
         panel.add(namespaceComboBox, c);
         namespaceComboBox.addActionListener(e -> {
             updateMavenProperties();
+        });
+        
+         // Add Application Name TextField
+        c.gridx = 0;
+        c.gridy++;
+        panel.add(new JLabel("Application Name:"), c);
+        c.gridx = 1;
+        applicationNameTextField = new PlaceholderTextField("Enter application name (default value 'artifactId')");
+        panel.add(applicationNameTextField, c);
+        applicationNameTextField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                 updateMavenProperties();
+            }
         });
 
         myJdkLabel = new JLabel(MavenConfigurableBundle.message("maven.settings.runner.jre"));
@@ -295,6 +312,7 @@ public class CloudPanel {
         Map<String, String> mavenProperties = new HashMap<>(myPropertiesPanel.getDataAsMap());
         String subscription = (String) subscriptionComboBox.getSelectedItem();
         String namespace = (String) namespaceComboBox.getSelectedItem();
+        String applicationName = applicationNameTextField.getText();
 
         if (namespace != null && !namespace.isEmpty() && !namespace.equals(LOADING)) {
             mavenProperties.put(CloudMavenProject.NAMESPACE_ATTR, namespace);
@@ -307,9 +325,15 @@ public class CloudPanel {
         } else {
             mavenProperties.remove(CloudMavenProject.SUBSCRIPTION_ATTR);
         }
+        
+        System.out.println("applicationName " + applicationName);
+        if (applicationName != null && !applicationName.trim().isEmpty()) {
+            mavenProperties.put(CloudMavenProject.APPLICATION_NAME_ATTR, applicationName);
+        } else {
+            mavenProperties.remove(CloudMavenProject.APPLICATION_NAME_ATTR);
+        }
 
         myPropertiesPanel.setDataFromMap(mavenProperties);
-        System.out.println("updateMavenProperties namespaceValue " + namespaceValue);
     }
 
     private void collectProperties() {
@@ -354,9 +378,13 @@ public class CloudPanel {
         } else {
             namespaceComboBox.setSelectedItem(null);
         }
-
-        System.out.println("getData namespaceValue " + namespaceValue);
-
+        if (mavenProperties.containsKey(CloudMavenProject.APPLICATION_NAME_ATTR)) {
+            String applicationName = mavenProperties.get(CloudMavenProject.APPLICATION_NAME_ATTR);
+            applicationNameTextField.setText(applicationName);
+            applicationNameValue = applicationName;
+        } else {
+            applicationNameTextField.setText(null);
+        }
     }
 
     protected void setData(MavenRunnerSettings data, CloudMavenConfiguration config) {
@@ -372,6 +400,7 @@ public class CloudPanel {
 
         String subscription = (String) subscriptionComboBox.getSelectedItem();
         String namespace = (String) namespaceComboBox.getSelectedItem();
+        String applicationName = applicationNameTextField.getText();
 
         if (namespace != null && !namespace.isEmpty() && !namespace.equals(LOADING)) {
             mavenProperties.put(CloudMavenProject.NAMESPACE_ATTR, namespace);
@@ -385,6 +414,11 @@ public class CloudPanel {
         } else {
             mavenProperties.remove(CloudMavenProject.SUBSCRIPTION_ATTR);
         }
+        if (applicationName != null && !applicationName.trim().isEmpty()) {
+            mavenProperties.put(CloudMavenProject.APPLICATION_NAME_ATTR, applicationName);
+        } else {
+            mavenProperties.remove(CloudMavenProject.APPLICATION_NAME_ATTR);
+        }
 
         data.setMavenProperties(mavenProperties);
 
@@ -392,8 +426,6 @@ public class CloudPanel {
         data.setPassParentEnv(myEnvVariablesComponent.isPassParentEnvs());
 
         config.setGoals((String) goalsComboBox.getSelectedItem());
-
-        System.out.println("set namespaceValue " + namespaceValue);
     }
 
     public Project getProject() {

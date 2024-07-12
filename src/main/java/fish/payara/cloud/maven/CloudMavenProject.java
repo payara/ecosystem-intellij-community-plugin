@@ -60,6 +60,7 @@ public class CloudMavenProject extends PayaraCloudProject {
     private static final String BUILD_FILE = "pom.xml";
     public static final String NAMESPACE_ATTR = "namespaceName";
     public static final String SUBSCRIPTION_ATTR = "subscriptionName";
+    public static final String APPLICATION_NAME_ATTR = "applicationName";
 
     @Override
     public String getLoginCommand() {
