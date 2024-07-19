@@ -31,7 +31,7 @@ dependencies {
 intellij {
     version = '241.14494.240'
     type = 'IC'
-    pluginName = 'Payara Community Tools'
+    pluginName = 'Payara IntelliJ Community Tools'
     plugins = ['java', 'maven', 'maven-model', 'gradle', 'terminal']
 }
 
