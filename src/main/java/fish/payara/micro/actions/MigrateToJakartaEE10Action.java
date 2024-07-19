@@ -15,7 +15,7 @@ import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.terminal.JBTerminalWidget;
 import fish.payara.micro.PayaraMicroProject;
-import fish.payara.micro.maven.MavenProject;
+import fish.payara.micro.maven.MicroMavenProject;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class MigrateToJakartaEE10Action extends MicroAction {
         final Project project = CommonDataKeys.PROJECT.getData(actionEvent.getDataContext());
         assert project != null;
         PsiFile[] poms = FilenameIndex.getFilesByName(project, "pom.xml", GlobalSearchScope.projectScope(project));
-        PayaraMicroProject microProject = new MavenProject(project, poms[0]);
+        PayaraMicroProject microProject = new MicroMavenProject(project, poms[0]);
         String projectName = project.getName();
         JBTerminalWidget terminal = getTerminal(project, projectName);
         if (terminal != null) {
@@ -70,7 +70,7 @@ public class MigrateToJakartaEE10Action extends MicroAction {
                         LOG.log(WARNING, e.getMessage(), projectName);
                     }
                     if (++count > TIME_OUT) {
-                        String message = "Tranformation aborted after 5 minutes";
+                        String message = "Transformation aborted after 5 minutes";
                         LOG.log(WARNING, message, projectName);
                         throw new RuntimeException(message);
                     }

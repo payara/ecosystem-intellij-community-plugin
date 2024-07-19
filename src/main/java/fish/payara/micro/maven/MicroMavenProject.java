@@ -23,44 +23,27 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import static fish.payara.PayaraConstants.DEFAULT_DEBUG_PORT;
 import fish.payara.micro.PayaraMicroProject;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Logger;
-
+import static fish.payara.PayaraConstants.DEFAULT_DEBUG_PORT;
+import fish.payara.util.MavenUtil;
 import static java.util.logging.Level.SEVERE;
-import static java.util.stream.Collectors.toList;
 
 /**
- *
  * @author gaurav.gupta@payara.fish
  */
-public class MavenProject extends PayaraMicroProject {
+public class MicroMavenProject extends PayaraMicroProject {
 
-    private static final Logger LOG = Logger.getLogger(MavenProject.class.getName());
+    private static final Logger LOG = Logger.getLogger(MicroMavenProject.class.getName());
 
-    private static final String PROFILES = "profiles";
-    private static final String PROFILE = "profile";
-    private static final String BUILD = "build";
-    private static final String PLUGINS = "plugins";
-    private static final String PLUGIN = "plugin";
-    private static final String GROUP_ID = "groupId";
-    private static final String ARTIFACT_ID = "artifactId";
-    private static final String NAME = "name";
     public static final String MICRO_GROUP_ID = "fish.payara.maven.plugins";
     public static final String MICRO_ARTIFACT_ID = "payara-micro-maven-plugin";
     public static final String MICRO_VERSION = "2.3";
@@ -152,15 +135,15 @@ public class MavenProject extends PayaraMicroProject {
                 PAYARA_TRANSFORMER, PAYARA_TRANSFORMER_MAVEN, PAYARA_TRANSFORMER_VERSION, srcPath, targetPath);
     }
 
-    public static MavenProject getInstance(Project project) {
+    public static MicroMavenProject getInstance(Project project) {
         PsiFile pom = getPomFile(project);
         if (pom != null) {
-            return new MavenProject(project, pom);
+            return new MicroMavenProject(project, pom);
         }
         return null;
     }
 
-    public MavenProject(Project project, PsiFile pom) {
+    public MicroMavenProject(Project project, PsiFile pom) {
         super(project, pom);
         parsePom();
     }
@@ -172,33 +155,7 @@ public class MavenProject extends PayaraMicroProject {
      */
     @Override
     public String getProjectName() {
-        String artifactId = null;
-        String name = null;
-        try {
-            Node pomRoot = getPomRootNode(super.getBuildFile());
-            if (pomRoot != null) {
-                NodeList childNodes = pomRoot.getChildNodes();
-                for (int childNodeIndex = 0; childNodeIndex < childNodes.getLength(); childNodeIndex++) {
-                    Node childNode = childNodes.item(childNodeIndex);
-                    if (childNode.getNodeName().equals(NAME)
-                            && childNode.getTextContent() != null) {
-                        name = childNode.getTextContent();
-                        break;
-                    }
-                    if (childNode.getNodeName().equals(ARTIFACT_ID)
-                            && childNode.getTextContent() != null) {
-                        artifactId = childNode.getTextContent();
-                    }
-                }
-            }
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
-            LOG.log(SEVERE, super.getBuildFile().getVirtualFile().getPath(), ex);
-        }
-        if (name != null) {
-            return name;
-        } else {
-            return artifactId;
-        }
+       return MavenUtil.getProjectName(super.getBuildFile());
     }
 
     /**
@@ -221,10 +178,10 @@ public class MavenProject extends PayaraMicroProject {
      */
     private static boolean isValidPom(PsiFile pomFile) {
         try {
-            Node pomRoot = getPomRootNode(pomFile);
-            return getBuildNodes(pomRoot)
+            Node pomRoot = MavenUtil.getPomRootNode(pomFile);
+            return MavenUtil.getBuildNodes(pomRoot)
                     .stream()
-                    .anyMatch(MavenProject::isMicroPlugin);
+                    .anyMatch(MicroMavenProject::isMicroPlugin);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             LOG.log(SEVERE, null, ex);
         }
@@ -237,33 +194,7 @@ public class MavenProject extends PayaraMicroProject {
      * @return true if pom.xml file includes Payara Micro Maven plugin
      */
     private static boolean isMicroPlugin(Node buildNode) {
-        return getMicroPluginNode(buildNode) != null;
-    }
-
-    private static Node getMicroPluginNode(Node buildNode) {
-        NodeList buildChildNodes = buildNode.getChildNodes();
-        for (int buildChildNodeIndex = 0; buildChildNodeIndex < buildChildNodes.getLength(); buildChildNodeIndex++) {
-            Node buildChildNode = buildChildNodes.item(buildChildNodeIndex);
-            for (Node pluginNode : getPluginNodes(buildChildNode)) {
-                NodeList pluginChildNodes = pluginNode.getChildNodes();
-                boolean microGroupId = false;
-                boolean microArtifactId = false;
-                for (int i = 0; i < pluginChildNodes.getLength(); i++) {
-                    Node node = pluginChildNodes.item(i);
-                    if (node.getNodeName().equals(GROUP_ID)
-                            && node.getTextContent().equals(MICRO_GROUP_ID)) {
-                        microGroupId = true;
-                    } else if (node.getNodeName().equals(ARTIFACT_ID)
-                            && node.getTextContent().equals(MICRO_ARTIFACT_ID)) {
-                        microArtifactId = true;
-                    }
-                    if (microGroupId && microArtifactId) {
-                        return pluginNode;
-                    }
-                }
-            }
-        }
-        return null;
+        return MavenUtil.getPluginNode(buildNode, MICRO_GROUP_ID, MICRO_ARTIFACT_ID) != null;
     }
 
     /**
@@ -271,9 +202,9 @@ public class MavenProject extends PayaraMicroProject {
      */
     private void parsePom() {
         try {
-            Node pomRoot = getPomRootNode(super.getBuildFile());
-            for (Node buildNode : getBuildNodes(pomRoot)) {
-                Node plugin = getMicroPluginNode(buildNode);
+            Node pomRoot = MavenUtil.getPomRootNode(super.getBuildFile());
+            for (Node buildNode : MavenUtil.getBuildNodes(pomRoot)) {
+                Node plugin = MavenUtil.getPluginNode(buildNode, MICRO_GROUP_ID, MICRO_ARTIFACT_ID);
                 if (plugin == null) {
                     continue;
                 }
@@ -298,80 +229,6 @@ public class MavenProject extends PayaraMicroProject {
         } catch (Exception ex) {
             LOG.log(SEVERE, super.getBuildFile().getVirtualFile().getPath(), ex);
         }
-    }
-
-    private static Node getPomRootNode(PsiFile pomFile) throws ParserConfigurationException, SAXException, IOException {
-        Node root = null;
-        if (pomFile.getVirtualFile() != null) {
-            File inputFile = new File(pomFile.getVirtualFile().getCanonicalPath());
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document buildDocument = builder.parse(inputFile);
-            buildDocument.getDocumentElement().normalize();
-            root = buildDocument.getDocumentElement();
-        }
-        return root;
-    }
-
-    private static List<Node> getBuildNodes(Node pomRoot) {
-        List<Node> buildNodes = new ArrayList<>();
-        if (pomRoot != null) {
-            NodeList childNodes = pomRoot.getChildNodes();
-            for (int childNodeIndex = 0; childNodeIndex < childNodes.getLength(); childNodeIndex++) {
-                Node childNode = childNodes.item(childNodeIndex);
-
-                buildNodes.addAll(
-                        getProfileNodes(childNode)
-                                .stream()
-                                .map(Node::getChildNodes)
-                                .map(MavenProject::getBuildNode)
-                                .filter(Objects::nonNull)
-                                .collect(toList())
-                );
-
-                if (childNode.getNodeName().equals(BUILD)) {
-                    buildNodes.add(childNode);
-                }
-            }
-        }
-        return buildNodes;
-    }
-
-    private static Node getBuildNode(NodeList childNode) {
-        for (int index = 0; index < childNode.getLength(); index++) {
-            if (childNode.item(index).getNodeName().equals(BUILD)) {
-                return childNode.item(index);
-            }
-        }
-        return null;
-    }
-
-    private static List<Node> getProfileNodes(Node childNode) {
-        List<Node> profildes = new ArrayList<>();
-        if (childNode.getNodeName().equals(PROFILES)) {
-            NodeList profileNodes = childNode.getChildNodes();
-            for (int profileIndex = 0; profileIndex < profileNodes.getLength(); profileIndex++) {
-                Node profile = profileNodes.item(profileIndex);
-                if (profile.getNodeName().equals(PROFILE)) {
-                    profildes.add(profile);
-                }
-            }
-        }
-        return profildes;
-    }
-
-    private static List<Node> getPluginNodes(Node childNode) {
-        List<Node> plugins = new ArrayList<>();
-        if (childNode.getNodeName().equals(PLUGINS)) {
-            NodeList pluginNodes = childNode.getChildNodes();
-            for (int pluginIndex = 0; pluginIndex < pluginNodes.getLength(); pluginIndex++) {
-                Node pluginNode = pluginNodes.item(pluginIndex);
-                if (pluginNode.getNodeName().equals(PLUGIN)) {
-                    plugins.add(pluginNode);
-                }
-            }
-        }
-        return plugins;
     }
 
     @Override
