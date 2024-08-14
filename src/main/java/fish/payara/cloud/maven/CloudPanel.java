@@ -326,7 +326,6 @@ public class CloudPanel {
             mavenProperties.remove(CloudMavenProject.SUBSCRIPTION_ATTR);
         }
         
-        System.out.println("applicationName " + applicationName);
         if (applicationName != null && !applicationName.trim().isEmpty()) {
             mavenProperties.put(CloudMavenProject.APPLICATION_NAME_ATTR, applicationName);
         } else {

@@ -29,15 +29,14 @@ dependencies {
 }
 
 intellij {
-    version = '241.14494.240'
+    version = '242.20224.387'
     type = 'IC'
     pluginName = 'Payara IntelliJ Community Tools'
     plugins = ['java', 'maven', 'maven-model', 'gradle', 'terminal']
 }
 
 patchPluginXml {
-    sinceBuild = "241.14494"
-    untilBuild = "241.*"
+    sinceBuild = "242.20224"
 }
 
 publishPlugin {

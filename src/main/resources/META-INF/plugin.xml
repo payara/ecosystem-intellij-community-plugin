@@ -1,11 +1,11 @@
 <idea-plugin>
     <id>fish.payara.micro.intellij</id>
-    <name>Payara IntelliJ Community Tools</name>
+    <name>Payara Community Tools</name>
     <description><![CDATA[
-        Payara IntelliJ Community plugin allows developer to create, run, and
+        Payara Community plugin allows developer to create, run, and
         debug the Payara Micro applications from the Intellij IDEA.
 
-        The following features are available in the Payara IntelliJ Community tools:
+        The following features are available in the Payara Community tools:
         <ul>
             <li>Creation of Payara Micro Maven Project</li>
             <li>Manage(Start, Stop, and Debug) Payara Micro application using project configuration</li>
