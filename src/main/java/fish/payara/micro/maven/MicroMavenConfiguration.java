@@ -45,12 +45,11 @@ public class MicroMavenConfiguration extends MavenRunConfiguration {
                 if (mavenProject == null) {
                     parameters.getGoals().add(MicroMavenProject.PACKAGE_GOAL);
                     parameters.getGoals().add(String.format(
-                            "%s:%s:%s:%s %s",
+                            "%s:%s:%s:%s",
                             MicroMavenProject.MICRO_GROUP_ID,
                             MicroMavenProject.MICRO_ARTIFACT_ID,
                             MicroMavenProject.MICRO_VERSION,
-                            MicroMavenProject.DEV_GOAL,
-                            MicroMavenProject.DEPLOY_WAR_PROPERTY
+                            MicroMavenProject.DEV_GOAL
                     ));
                 } else {
                     parameters.getGoals().add(MicroMavenProject.PACKAGE_GOAL);
