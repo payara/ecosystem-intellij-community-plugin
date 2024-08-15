@@ -45,7 +45,7 @@ public class CloudMavenProject extends PayaraCloudProject {
 
     public static final String CLOUD_GROUP_ID = "fish.payara.maven.plugins";
     public static final String CLOUD_ARTIFACT_ID = "payara-cloud-maven-plugin";
-    public static final String CLOUD_VERSION = "1.0-Alpha3";
+    public static final String CLOUD_VERSION = "1.0-Alpha4";
     public static final String CLOUD_PLUGIN = "payara-cloud";
     public static final String START_GOAL = "start";
     public static final String LOGIN_GOAL = "login";
