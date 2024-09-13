@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2024 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -116,8 +116,8 @@ public class PayaraMicroModuleBuilder extends JavaModuleBuilder {
         Map<String, String> props = new HashMap<>();
         String projectVersion = "1.0-SNAPSHOT";
         props.put(ARCHETYPE_INTERACTIVE_MODE, Boolean.FALSE.toString());
-        props.put(ARCHETYPE_GROUP_ID_KEY, ARCHETYPE_GROUP_ID);
-        props.put(ARCHETYPE_ARTIFACT_ID_KEY, ARCHETYPE_ARTIFACT_ID);
+        props.put(STARTER_ARCHETYPE_GROUP_ID, STARTER_ARCHETYPE_GROUP_ID);
+        props.put(STARTER_ARCHETYPE_ARTIFACT_ID, STARTER_ARCHETYPE_ARTIFACT_ID);
         props.put(ARCHETYPE_VERSION_KEY, archetypeVersion);
         props.put(PROP_GROUP_ID, moduleDescriptor.getGroupId());
         props.put(PROP_ARTIFACT_ID, moduleDescriptor.getArtifactId());

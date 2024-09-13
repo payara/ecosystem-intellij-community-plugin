@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2024 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,7 +43,7 @@ public class PayaraMicroProjectWizardStep extends ModuleWizardStep {
     private JComboBox<String> microVersionComboBox;
     
     public static final String[] ARCHETYPE_MICRO_VERSIONS = new String[] {
-        "6.2024.7", "6.2024.6", "6.2024.5", "6.2024.4",
+        "7.2024.1.Alpha1", "6.2024.7", "6.2024.6", "6.2024.5", "6.2024.4",
         "6.2024.3", "6.2024.2", "6.2024.1", "6.2023.12",
         "6.2023.11", "6.2023.10", "6.2023.9", "6.2023.8",
         "6.2023.7", "6.2023.6", "6.2023.5", "6.2023.4",

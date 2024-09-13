@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2020-2024 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +30,8 @@ public interface PayaraMicroConstants {
     String ARCHETYPE_ARTIFACT_ID_KEY = "archetypeArtifactId";
     String ARCHETYPE_VERSION_KEY = "archetypeVersion";
     String ARCHETYPE_INTERACTIVE_MODE = "interactiveMode";
+    String STARTER_ARCHETYPE_GROUP_ID = "fish.payara.starter";
+    String STARTER_ARCHETYPE_ARTIFACT_ID = "payara-starter-archetype";
 
     String PROP_GROUP_ID = "groupId";
     String PROP_ARTIFACT_ID = "artifactId";
