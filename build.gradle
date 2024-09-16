@@ -30,7 +30,7 @@ dependencies {
 
 // SpotBugs Configuration
 spotbugs {
-    toolVersion = '5.0.14'  // Set the SpotBugs version
+    toolVersion = '4.2.3'  // Set the SpotBugs version
     effort = 'max'          // Maximum analysis effort
     reportLevel = 'low'     // Report all issues
     ignoreFailures = false  // Fail the build on SpotBugs violations (set to true if you want the build to continue)
