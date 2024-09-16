@@ -22,12 +22,26 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.util.ui.JBUI;
 import fish.payara.PayaraBundle;
-
+import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.regex.Pattern;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.UnknownHostException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -41,23 +55,56 @@ public class PayaraMicroProjectWizardStep extends ModuleWizardStep {
     private JCheckBox autoBindHttpCheckBox;
     private JTextField contextRootTextField;
     private JComboBox<String> microVersionComboBox;
-    
-    public static final String[] ARCHETYPE_MICRO_VERSIONS = new String[] {
-        "7.2024.1.Alpha1", "6.2024.7", "6.2024.6", "6.2024.5", "6.2024.4",
-        "6.2024.3", "6.2024.2", "6.2024.1", "6.2023.12",
-        "6.2023.11", "6.2023.10", "6.2023.9", "6.2023.8",
-        "6.2023.7", "6.2023.6", "6.2023.5", "6.2023.4",
-        "6.2023.3", "6.2023.2", "6.2023.1", "6.2022.2",
-        "6.2022.1", "5.2023.1", "5.2022.5", "5.2022.4",
-        "5.2022.3", "5.2022.2", "5.2022.1", "5.2021.10",
-        "5.2021.9", "5.2021.8", "5.2021.7", "5.2021.6",
-        "5.2021.5", "5.2021.4", "5.2021.3", "5.2021.2",
-        "5.2021.1", "5.2020.7", "5.2020.6", "5.2020.5",
-        "5.2020.4", "5.2020.3", "5.2020.2", "5.201",
-        "5.194", "5.193.1", "5.192", "5.191", "5.184",
-        "5.183", "5.182", "5.181"
-    };
-        
+
+    public static final String DEFAULT_REPOSITORY_URL = "https://repo1.maven.org/maven2/"; // NOI18N
+    private static final String METADATA_URL = "fish/payara/extras/payara-micro/maven-metadata.xml"; // NOI18N
+
+    private static final java.util.List<String> versions = new ArrayList<>();
+    public static String[] getVersions() {
+        if (versions.isEmpty()) {
+            try {
+                // Construct the full URL
+                String urlString = DEFAULT_REPOSITORY_URL + METADATA_URL;
+                URL url = new URL(urlString);
+
+                // Open connection
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+
+                // Read the response
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder xmlResponse = new StringBuilder();
+                String line;
+                while ((line = in.readLine()) != null) {
+                    xmlResponse.append(line);
+                }
+                in.close();
+
+                // Parse the XML response
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document doc = builder.parse(new InputSource(new StringReader(xmlResponse.toString())));
+
+                String latest = doc.getElementsByTagName("latest").item(0).getTextContent();
+                // Extract versions
+                NodeList versionNodes = doc.getElementsByTagName("version");
+                for (int i = versionNodes.getLength() - 1; i >= 0; i--) {
+                    String version = versionNodes.item(i).getTextContent();
+                    if ((version.contains("Alpha") || version.contains("Beta") || version.contains("SNAPSHOT")) // NOI18N
+                            && !version.equals(latest)) {
+                        continue;
+                    };
+                    versions.add(version);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return versions.toArray(new String[0]);
+    }
+
     private static final Pattern GROUP_ID_PATTERN = Pattern.compile("^[a-z0-9_]+(\\.[a-z0-9_]+)*$");
     private static final Pattern ARTIFACT_ID_PATTERN = Pattern.compile("^[a-z0-9_]+([\\-\\.][a-z0-9_]+)*$");
 
@@ -127,7 +174,7 @@ public class PayaraMicroProjectWizardStep extends ModuleWizardStep {
                 constraints
         );
         
-        microVersionComboBox = new JComboBox<String>(ARCHETYPE_MICRO_VERSIONS);
+        microVersionComboBox = new JComboBox<String>(getVersions());
         microVersionComboBox.setEditable(true);
         constraints.gridy++;
         panel.add(
