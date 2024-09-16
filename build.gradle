@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '1.17.2'
+    id 'com.github.spotbugs' version '5.0.14' // Add SpotBugs plugin
 }
 
 apply plugin: 'org.jetbrains.intellij'
@@ -22,10 +23,24 @@ repositories {
 }
 
 dependencies {
-
     implementation 'fish.payara.tools:payara-cloud:1.0-Alpha4'
     implementation 'fish.payara.cloud:cloud-api:1.0.1'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.1'
+}
+
+// SpotBugs Configuration
+spotbugs {
+    toolVersion = '5.0.14'  // Set the SpotBugs version
+    effort = 'max'          // Maximum analysis effort
+    reportLevel = 'low'     // Report all issues
+    ignoreFailures = false  // Fail the build on SpotBugs violations (set to true if you want the build to continue)
+}
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    reports {
+        xml.enabled = true    // Enable XML report
+        html.enabled = true   // Enable HTML report
+    }
 }
 
 intellij {
