@@ -43,6 +43,7 @@ import java.util.Map;
 import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.wm.ToolWindowManager;
 import static fish.payara.micro.project.PayaraMicroConstants.*;
 
 public class PayaraMicroModuleBuilder extends JavaModuleBuilder {
@@ -112,12 +113,13 @@ public class PayaraMicroModuleBuilder extends JavaModuleBuilder {
      */
     private void generateFromArchetype(final Project project, Sdk jdk) {
         String[] versionToken = moduleDescriptor.getMicroVersion().trim().split("\\.");
-        String archetypeVersion = versionToken.length > 1 && Integer.parseInt(versionToken[0]) < 6 ? ARCHETYPE_VERSION_5X : ARCHETYPE_VERSION;
+        boolean oldArch = versionToken.length > 1 && Integer.parseInt(versionToken[0]) < 6;
+        String archetypeVersion = oldArch ? ARCHETYPE_VERSION_5X : ARCHETYPE_VERSION;
         Map<String, String> props = new HashMap<>();
         String projectVersion = "1.0-SNAPSHOT";
         props.put(ARCHETYPE_INTERACTIVE_MODE, Boolean.FALSE.toString());
-        props.put(STARTER_ARCHETYPE_GROUP_ID, STARTER_ARCHETYPE_GROUP_ID);
-        props.put(STARTER_ARCHETYPE_ARTIFACT_ID, STARTER_ARCHETYPE_ARTIFACT_ID);
+        props.put(ARCHETYPE_GROUP_ID_KEY, oldArch ? ARCHETYPE_GROUP_ID : STARTER_ARCHETYPE_GROUP_ID);
+        props.put(ARCHETYPE_ARTIFACT_ID_KEY, oldArch ? ARCHETYPE_ARTIFACT_ID : STARTER_ARCHETYPE_ARTIFACT_ID);
         props.put(ARCHETYPE_VERSION_KEY, archetypeVersion);
         props.put(PROP_GROUP_ID, moduleDescriptor.getGroupId());
         props.put(PROP_ARTIFACT_ID, moduleDescriptor.getArtifactId());
@@ -137,9 +139,9 @@ public class PayaraMicroModuleBuilder extends JavaModuleBuilder {
         }
         
         MavenArchetype mavenArchetype = new MavenArchetype(
-                ARCHETYPE_GROUP_ID,
-                ARCHETYPE_ARTIFACT_ID,
-                archetypeVersion,
+                props.get(ARCHETYPE_GROUP_ID_KEY),
+                props.get(ARCHETYPE_ARTIFACT_ID_KEY),
+                props.get(ARCHETYPE_VERSION_KEY),
                 null,
                 null
         );
@@ -155,7 +157,9 @@ public class PayaraMicroModuleBuilder extends JavaModuleBuilder {
                         mavenArchetype, props, PayaraBundle.message("PayaraMicroModuleType.archetype.title"));
                 helper.configure(project, project.getBaseDir(), false);
             }, PayaraBundle.message("PayaraMicroProjectWizardStep.generating.project", this.getPresentableName()), true, null);
-            LocalFileSystem.getInstance().refresh(false);
+            ToolWindowManager.getInstance(project).invokeLater(() -> {
+                LocalFileSystem.getInstance().refresh(false);
+            });
         }, ModalityState.current());
     }
 
