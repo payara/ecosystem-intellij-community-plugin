@@ -35,7 +35,7 @@ public class MicroStartAction extends MicroAction {
     public void onAction(PayaraMicroProject project) {
         String projectName;
         projectName = project.getProjectName();
-        JBTerminalWidget terminal = getTerminal(project, projectName + " instance");
+        JBTerminalWidget terminal = getTerminal(project.getProject(), projectName + " instance");
         if (terminal != null) {
             executeCommand(terminal, project.getStartCommand(false));
         } else {

@@ -37,7 +37,7 @@ public class CloudListApplicationAction extends CloudAction {
     @Override
     public void onAction(PayaraCloudProject project) {
         String projectName = project.getProjectName();
-        JBTerminalWidget terminal = getTerminal(project, projectName);
+        JBTerminalWidget terminal = getTerminal(project.getProject(), projectName);
         if (terminal != null) {
             JPanel panel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();

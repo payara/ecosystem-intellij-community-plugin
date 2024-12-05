@@ -34,8 +34,8 @@ public class MicroStartDebuggerAction extends MicroAction {
     public void onAction(PayaraMicroProject project) {
         String projectName;
         projectName = project.getProjectName();
-        DebuggerManager.connect(project);
-        JBTerminalWidget terminal = getTerminal(project, projectName + " instance");
+        DebuggerManager.connect(project.getProject());
+        JBTerminalWidget terminal = getTerminal(project.getProject(), projectName + " instance");
         if (terminal != null) {
             executeCommand(terminal, project.getStartCommand(true));
         } else {

@@ -16,23 +16,16 @@
  */
 package fish.payara.cloud.maven;
 
-import com.intellij.diagnostic.ActivityCategory;
-import com.intellij.openapi.extensions.PluginDescriptor;
-import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import fish.payara.cloud.PayaraCloudProject;
 import fish.payara.util.MavenUtil;
-import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Logger;
 import static java.util.logging.Level.SEVERE;
 
@@ -189,43 +182,4 @@ public class CloudMavenProject extends PayaraCloudProject {
         return MavenUtil.getPluginNode(buildNode, CLOUD_GROUP_ID, CLOUD_ARTIFACT_ID) != null;
     }
 
-    @Override
-    public RuntimeException createError(Throwable error, PluginId pluginId) {
-        return getProject().createError(error, pluginId);
-    }
-
-    @Override
-    public RuntimeException createError(String message, PluginId pluginId) {
-        return getProject().createError(message, pluginId);
-    }
-
-    @Override
-    public RuntimeException createError(String message, Throwable throwable, PluginId pluginId, Map<String, String> attachments) {
-        return getProject().createError(message, throwable, pluginId, attachments);
-    }
-
-    @Override
-    public @NotNull ActivityCategory getActivityCategory(boolean isExtension) {
-        return getProject().getActivityCategory(isExtension);
-    }
-
-    @Override
-    public boolean isInjectionForExtensionSupported() {
-        return getProject().isInjectionForExtensionSupported();
-    }
-
-    @Override
-    public <T> T getService(@NotNull Class<T> serviceClass) {
-        return getProject().getService(serviceClass);
-    }
-
-    @Override
-    public <T> T instantiateClassWithConstructorInjection(@NotNull Class<T> aClass, @NotNull Object key, @NotNull PluginId pluginId) {
-        return getProject().instantiateClassWithConstructorInjection(aClass, key, pluginId);
-    }
-
-    @Override
-    public <T> Class<T> loadClass(String className, PluginDescriptor pluginDescriptor) throws ClassNotFoundException {
-        return getProject().loadClass(className, pluginDescriptor);
-    }
 }
