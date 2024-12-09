@@ -33,7 +33,7 @@ public class MicroBundleAction extends MicroAction {
     public void onAction(PayaraMicroProject project) {
         String projectName;
         projectName = project.getProjectName();
-        JBTerminalWidget terminal = getTerminal(project, projectName);
+        JBTerminalWidget terminal = getTerminal(project.getProject(), projectName);
         if (terminal != null) {
             executeCommand(terminal, project.getBundleCommand());
         } else {

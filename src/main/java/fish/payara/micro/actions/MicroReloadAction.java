@@ -40,7 +40,7 @@ public class MicroReloadAction extends MicroAction {
             String projectName = project.getProjectName();
             String command = project.getReloadCommand();
 
-            JBTerminalWidget terminal = getTerminal(project, projectName);
+            JBTerminalWidget terminal = getTerminal(project.getProject(), projectName);
             if (terminal != null) {
                 executeCommand(terminal, command);
             } else {
@@ -56,7 +56,7 @@ public class MicroReloadAction extends MicroAction {
                             ise.getMessage(),
                             NotificationType.WARNING,
                             NotificationListener.URL_OPENING_LISTENER
-                    ), project);
+                    ), project.getProject());
         }
     }
 

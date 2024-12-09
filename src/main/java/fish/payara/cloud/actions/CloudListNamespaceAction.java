@@ -36,7 +36,7 @@ public class CloudListNamespaceAction extends CloudAction {
     public void onAction(PayaraCloudProject project) {
         String projectName;
         projectName = project.getProjectName();
-        JBTerminalWidget terminal = getTerminal(project, projectName);
+        JBTerminalWidget terminal = getTerminal(project.getProject(), projectName);
         if (terminal != null) {
             String subscriptionValue = Messages.showInputDialog(
                 project.getProject(),

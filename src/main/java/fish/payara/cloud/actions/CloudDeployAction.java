@@ -35,7 +35,7 @@ public class CloudDeployAction extends CloudAction {
     public void onAction(PayaraCloudProject project) {
         String projectName;
         projectName = project.getProjectName();
-        JBTerminalWidget terminal = getTerminal(project, projectName + " instance");
+        JBTerminalWidget terminal = getTerminal(project.getProject(), projectName + " instance");
         if (terminal != null) {
             executeCommand(terminal, project.getDeployCommand());
         } else {

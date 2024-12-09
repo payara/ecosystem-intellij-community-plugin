@@ -33,7 +33,7 @@ import kotlinx.coroutines.GlobalScope;
  *
  * @author gaurav.gupta@payara.fish
  */
-public abstract class PayaraCloudProject implements Project {
+public abstract class PayaraCloudProject {
 
     private final Project project;
 
@@ -76,113 +76,5 @@ public abstract class PayaraCloudProject implements Project {
 
     public abstract String getSubscriptionCommand();
 
-    @Override
-    public String getName() {
-        return project.getName();
-    }
-
-    @Override
-    public VirtualFile getBaseDir() {
-        return project.getBaseDir();
-    }
-
-    @Override
-    public String getBasePath() {
-        return project.getBasePath();
-    }
-
-    @Override
-    public VirtualFile getProjectFile() {
-        return project.getProjectFile();
-    }
-
-    @Override
-    public String getProjectFilePath() {
-        return project.getProjectFilePath();
-    }
-
-    @Override
-    public VirtualFile getWorkspaceFile() {
-        return project.getWorkspaceFile();
-    }
-
-    @Override
-    public String getLocationHash() {
-        return project.getLocationHash();
-    }
-
-    @Override
-    public void save() {
-        project.save();
-    }
-
-    @Override
-    public boolean isOpen() {
-        return project.isOpen();
-    }
-
-    @Override
-    public boolean isInitialized() {
-        return project.isInitialized();
-    }
-
-    @Override
-    public boolean isDefault() {
-        return project.isDefault();
-    }
-
-    @Override
-    public <T> T getComponent(Class<T> type) {
-        return project.getComponent(type);
-    }
-
-    @Override
-    public MessageBus getMessageBus() {
-        return project.getMessageBus();
-    }
-
-    @Override
-    public boolean isDisposed() {
-        return project.isDisposed();
-    }
-
-    @Override
-    public Condition<?> getDisposed() {
-        return project.getDisposed();
-    }
-
-    @Override
-    public <T> T getUserData(Key<T> key) {
-        return project.getUserData(key);
-    }
-
-    @Override
-    public <T> void putUserData(Key<T> key, T t) {
-        project.putUserData(key, t);
-    }
-
-    @Override
-    public void dispose() {
-        project.dispose();
-    }
-
-    public CoroutineScope getCoroutineScope() {
-        return GlobalScope.INSTANCE;
-    }
-
-    @Override
-    public <@NotNull T> T instantiateClass(@NotNull String baseClass, PluginDescriptor pluginDescriptor) {
-        return getProject().instantiateClass(baseClass, pluginDescriptor);
-    }
-
-    @Override
-    public ExtensionsArea getExtensionArea() {
-        return getProject().getExtensionArea();
-    }
-
-    @Override
-    public boolean hasComponent(@NotNull Class<?> interfaceClass) {
-        return getProject().hasComponent(interfaceClass);
-    }
 
 }

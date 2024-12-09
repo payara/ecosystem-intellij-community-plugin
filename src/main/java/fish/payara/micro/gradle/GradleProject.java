@@ -16,9 +16,6 @@
  */
 package fish.payara.micro.gradle;
 
-import com.intellij.diagnostic.ActivityCategory;
-import com.intellij.openapi.extensions.PluginDescriptor;
-import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -26,14 +23,11 @@ import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import static fish.payara.PayaraConstants.DEFAULT_DEBUG_PORT;
 import fish.payara.micro.PayaraMicroProject;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -235,44 +229,4 @@ public class GradleProject extends PayaraMicroProject {
                 && pairs[1].trim().equals("true");
     }
 
-    @Override
-    public RuntimeException createError(Throwable error, PluginId pluginId) {
-        return getProject().createError(error, pluginId);
-    }
-
-    @Override
-    public RuntimeException createError(String message, PluginId pluginId) {
-        return getProject().createError(message, pluginId);
-    }
-
-    @Override
-    public RuntimeException createError(String message, Throwable throwable, PluginId pluginId, Map<String, String> attachments) {
-        return getProject().createError(message, throwable, pluginId, attachments);
-    }
-
-    @Override
-    public @NotNull
-    ActivityCategory getActivityCategory(boolean isExtension) {
-        return getProject().getActivityCategory(isExtension);
-    }
-
-    @Override
-    public boolean isInjectionForExtensionSupported() {
-        return getProject().isInjectionForExtensionSupported();
-    }
-
-    @Override
-    public <T> T getService(@NotNull Class<T> serviceClass) {
-        return getProject().getService(serviceClass);
-    }
-
-    @Override
-    public <T> T instantiateClassWithConstructorInjection(@NotNull Class<T> aClass, @NotNull Object key, @NotNull PluginId pluginId) {
-        return getProject().instantiateClassWithConstructorInjection(aClass, key, pluginId);
-    }
-
-    @Override
-    public <T> Class<T> loadClass(String className, PluginDescriptor pluginDescriptor) throws ClassNotFoundException {
-        return getProject().loadClass(className, pluginDescriptor);
-    }
 }
