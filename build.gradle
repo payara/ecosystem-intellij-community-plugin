@@ -44,14 +44,14 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
 }
 
 intellij {
-    version = '243.21565.193'
+    version = '251.17181-EAP-CANDIDATE-SNAPSHOT'
     type = 'IC'
     pluginName = 'Payara IntelliJ Community Tools'
     plugins = ['java', 'maven', 'maven-model', 'gradle', 'terminal']
 }
 
 patchPluginXml {
-    sinceBuild = "243.21565"
+    sinceBuild = "251.17181"
 }
 
 publishPlugin {
