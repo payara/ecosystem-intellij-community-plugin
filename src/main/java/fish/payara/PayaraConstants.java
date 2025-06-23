@@ -17,6 +17,8 @@
 package fish.payara;
 
 import com.intellij.openapi.util.IconLoader;
+import java.io.File;
+import java.util.regex.Pattern;
 import javax.swing.Icon;
 
 public interface PayaraConstants {
@@ -24,5 +26,9 @@ public interface PayaraConstants {
     Icon PAYARA_ICON = IconLoader.getIcon("/icons/payara.svg");
     Icon CLOUD_ICON = IconLoader.getIcon("/icons/cloud.svg");
     int DEFAULT_DEBUG_PORT = 9007;
+
+    String PAYARA_BIN_DIRECTORY_NAME = "bin";
+    String PAYARA_MODULES_DIRECTORY_NAME = "glassfish" + File.separator + "modules";
+    Pattern PAYARA_JAR_PATTERN = Pattern.compile("payara-.*\\.jar");
 
 }

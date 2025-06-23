@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.17.2'
+    id 'org.jetbrains.intellij' version '1.13.2'
     id 'com.github.spotbugs' version '5.0.14' // Add SpotBugs plugin
 }
 
@@ -43,8 +43,15 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     }
 }
 
+runIde {
+    jvmArgs = [
+        '--add-exports', 'java.base/jdk.internal.vm=ALL-UNNAMED',
+        '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'
+    ]
+}
+
 intellij {
-    version = '251.17181-EAP-CANDIDATE-SNAPSHOT'
+    version = '251.26094.121'
     type = 'IC'
     pluginName = 'Payara IntelliJ Community Tools'
     plugins = ['java', 'maven', 'maven-model', 'gradle', 'terminal']
