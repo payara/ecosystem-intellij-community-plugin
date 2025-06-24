@@ -41,6 +41,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <configurationType implementation="fish.payara.micro.PayaraMicroConfigurationType"/>
+        <configurationType implementation="fish.payara.server.PayaraServerConfigurationType"/>
         <moduleBuilder builderClass="fish.payara.micro.project.PayaraMicroModuleBuilder" order="last" id="PAYARA_MICRO_MODULE_BUILDER"/>
         <moduleType implementationClass="fish.payara.micro.project.PayaraMicroModuleType" id="JAVA_MODULE"/>
         <configurationType implementation="fish.payara.cloud.PayaraCloudConfigurationType"/>
