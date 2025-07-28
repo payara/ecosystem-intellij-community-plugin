@@ -116,9 +116,7 @@ public class ServerPanel {
         c.gridy++;
         panel.add(new JLabel("Goals:"), c);
         c.gridx = 1;
-        List<String> goals = new ArrayList<>();
-        goals.add(ServerMavenProject.DEV_GOAL);
-        goals.add(ServerMavenProject.START_GOAL);
+        List<String> goals = List.of(ServerMavenProject.DEV_GOAL, ServerMavenProject.START_GOAL);
         goalsComboBox = new ComboBox<>(goals.toArray(new String[0]));
         goalsComboBox.setEditable(true);
         panel.add(goalsComboBox, c);
@@ -144,11 +142,11 @@ public class ServerPanel {
         JPanel appSettingsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints apc = new GridBagConstraints();
         apc.insets = new Insets(2, 5, 2, 5);
-
         apc.gridx = 0;
         apc.gridy = 0;
         apc.gridwidth = 2;
         apc.fill = GridBagConstraints.HORIZONTAL;
+
         explodedCheckBox = new JCheckBox("Deploy in Exploded Format");
         appSettingsPanel.add(explodedCheckBox, apc);
 
@@ -178,24 +176,24 @@ public class ServerPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         panel.add(appSettingsCollapsible, c);
 
-        // Advanced Settings (Collapsible)
-        userField = new JTextField();
+        // === Payara Server Settings ===
         hostField = new JTextField();
         protocolComboBox = new JComboBox<>(new String[]{"http", "https"});
         httpPortField = new JTextField();
         httpsPortField = new JTextField();
         adminPortField = new JTextField();
         debugPortField = new JTextField();
-        payaraHomeField = new TextFieldWithBrowseButton();
-        payaraHomeField.setText(payaraProperties.getOrDefault("payara.home", ""));
-        payaraHomeField.addBrowseFolderListener("Select Payara Home Directory", null, myProject,
-                FileChooserDescriptorFactory.createSingleFolderDescriptor());
-
         payaraVersionField = new JTextField();
         domainNameField = new JTextField();
         instanceNameField = new JTextField();
         remoteCheckBox = new JCheckBox();
+        userField = new JTextField();
         passwordField = new JPasswordField();
+
+        payaraHomeField = new TextFieldWithBrowseButton();
+        payaraHomeField.setText(payaraProperties.getOrDefault("payara.home", ""));
+        payaraHomeField.addBrowseFolderListener("Select Payara Home Directory", null, myProject,
+                FileChooserDescriptorFactory.createSingleFolderDescriptor());
 
         JPanel payaraSettingsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints ac = new GridBagConstraints();
@@ -255,6 +253,18 @@ public class ServerPanel {
         payaraSettingsPanel.add(new JLabel("Debug Port:"), ac);
         ac.gridx = 1;
         payaraSettingsPanel.add(debugPortField, ac);
+        ac.gridx = 0;
+        ac.gridy++;
+
+        payaraSettingsPanel.add(new JLabel("Admin Username:"), ac);
+        ac.gridx = 1;
+        payaraSettingsPanel.add(userField, ac);
+        ac.gridx = 0;
+        ac.gridy++;
+        
+        payaraSettingsPanel.add(new JLabel("Admin Password:"), ac);
+        ac.gridx = 1;
+        payaraSettingsPanel.add(passwordField, ac);
         ac.gridx = 0;
         ac.gridy++;
 
@@ -561,12 +571,9 @@ public class ServerPanel {
             putIfNotEmpty(envVars, "PAYARA_DEBUG", "true");
         }
         putIfNotEmpty(envVars, "PAYARA_DEBUG_PORT", debugPortField.getText());
-        putIfNotEmpty(envVars, "PAYARA_ADMIN_USER", userField.getText());
 
-        String password = new String(passwordField.getPassword()).trim();
-        if (!password.isEmpty()) {
-            envVars.put("PAYARA_ADMIN_PASSWORD", password);
-        }
+        putIfNotEmpty(envVars, "PAYARA_ADMIN_USER", userField.getText());
+        putIfNotEmpty(envVars, "PAYARA_ADMIN_PASSWORD", new String(passwordField.getPassword()).trim());
     }
 
     public Project getProject() {
