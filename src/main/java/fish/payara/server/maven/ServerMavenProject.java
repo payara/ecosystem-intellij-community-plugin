@@ -39,7 +39,7 @@ public class ServerMavenProject extends PayaraServerProject {
 
     public static final String SERVER_PLUGIN_GROUP_ID = "fish.payara.maven.plugins";
     public static final String SERVER_PLUGIN_ARTIFACT_ID = "payara-server-maven-plugin";
-    public static final String SERVER_PLUGIN_VERSION = "1.0.0-Alpha2";
+    public static final String SERVER_PLUGIN_VERSION = "1.0.0-Alpha3";
     public static final String SERVER_PLUGIN = "payara-server";
     public static final String START_GOAL = "start";
     public static final String DEV_GOAL = "dev";

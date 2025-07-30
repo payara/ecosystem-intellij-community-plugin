@@ -28,7 +28,7 @@ public class PayaraServerConfigurationType implements ConfigurationType {
     @NotNull
     @Override
     public String getDisplayName() {
-        return "Payara Server Maven Plugin";
+        return "Payara Server";
     }
 
     @Override

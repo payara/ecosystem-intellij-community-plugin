@@ -8,8 +8,8 @@ apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'idea'
 apply plugin: 'java'
 
-group 'fish.payara.micro.intellij'
-version '2.2.0-SNAPSHOT'
+group 'fish.payara.tools'
+version '2.2.0'
 
 sourceCompatibility = "17"
 targetCompatibility = "17"
@@ -51,14 +51,14 @@ runIde {
 }
 
 intellij {
-    version = '251.26094.121'
+    version = '251.26927.53'
     type = 'IC'
-    pluginName = 'Payara IntelliJ Community Tools'
+    pluginName = 'Payara IntelliJ Tools'
     plugins = ['java', 'maven', 'maven-model', 'gradle', 'terminal']
 }
 
 patchPluginXml {
-    sinceBuild = "251.17181"
+    sinceBuild = "251.26927"
 }
 
 publishPlugin {

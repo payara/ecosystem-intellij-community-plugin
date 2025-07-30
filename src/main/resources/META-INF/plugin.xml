@@ -1,16 +1,9 @@
 <idea-plugin>
-    <id>fish.payara.micro.intellij</id>
-    <name>Payara Community Tools</name>
+    <id>fish.payara.intellij</id>
+    <name>Payara Tools</name>
     <description><![CDATA[
-        Payara Community plugin allows developer to create, run, and
-        debug the Payara Micro applications from the Intellij IDEA.
-
-        The following features are available in the Payara Community tools:
-        <ul>
-            <li>Creation of Payara Micro Maven Project</li>
-            <li>Manage(Start, Stop, and Debug) Payara Micro application using project configuration</li>
-            <li>Manage(Start, Stop, and Debug) Payara Micro application using IntelliJ actions</li>
-        </ul>
+        Payara Tools allows configuring and using the Payara Platform, 
+        for deploying and managing applications from the IDEA.  
 
         The plugin also provides seamless integration with Payara Cloud for deploying and managing Jakarta EE applications:
         <ul>
@@ -21,8 +14,8 @@
             <li>Retrieve lists of applications, namespaces, and subscriptions from the Payara Cloud.</li>
         </ul>
         
-        Download the <a href="https://plugins.jetbrains.com/plugin/15114-payara-platform-tools">
-        Payara Platform tools</a> available in the IntelliJ IDEA Ulitmate 
+        Download the <a href="https://plugins.jetbrains.com/plugin/15114-payara-tools/">
+        Payara Tools</a> available in the IntelliJ IDEA Ulitmate and Community 
         to develop the application with the Payara cloud, Payara Micro and Payara Server.
         
         Checkout the <a href="https://docs.payara.fish/community/docs/5.2020.6/documentation/ecosystem/intellij-plugin/README.html">
